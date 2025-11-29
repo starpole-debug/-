@@ -1,0 +1,61 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:15
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: aiapp
+      POSTGRES_PASSWORD: aiapp
+      POSTGRES_DB: aiapp
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  redis:
+    image: redis:7
+    command: ["redis-server", "--appendonly", "yes"]
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+
+  backend:
+    build:
+      context: ./backend
+    restart: unless-stopped
+    env_file:
+      - ./backend/.env.example
+    environment:
+      APP_ENV: docker
+      DB_DSN: postgres://aiapp:aiapp@postgres:5432/aiapp?sslmode=disable
+      REDIS_ADDR: redis:6379
+      JWT_SECRET: dev-secret
+      ADMIN_SECRET: admin-secret
+      SERVER_PORT: "8080"
+      FRONTEND_ORIGIN: http://localhost:3000
+    depends_on:
+      - postgres
+      - redis
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./backend:/app
+
+  frontend:
+    build:
+      context: ./frontend
+    restart: unless-stopped
+    environment:
+      NUXT_PUBLIC_API_BASE: http://localhost:8080/api
+      NUXT_HOST: 0.0.0.0
+      NUXT_PORT: "3000"
+    depends_on:
+      - backend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app
+
+volumes:
+  postgres-data:

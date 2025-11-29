@@ -1,0 +1,107 @@
+{
+  "chat_completion_source": "openai",
+
+  // 模型相关
+  "openai_model": "gpt-4-turbo",
+  "claude_model": "claude-sonnet-4-5",
+  "mistralai_model": "mistral-large-latest",
+  "custom_model": "",
+  "custom_url": "",
+
+  // 采样 / 生成参数（控制文风、随机度等）
+  "temperature": 1,
+  "frequency_penalty": 0,
+  "presence_penalty": 0,
+  "top_p": 1,
+  "top_k": 0,
+  "top_a": 0,
+  "min_p": 0,
+  "repetition_penalty": 1,
+  "repetition_penalty_range": 1024,
+  "tfs": 1,
+  "typical_p": 1,
+
+  // 上下文长度相关
+  "openai_max_context": 32768,
+  "openai_max_tokens": 4096,
+  "max_context_unlocked": false,
+
+  // prompt 片段列表
+  "prompts": [
+    {
+      "name": "Main Prompt",
+      "system_prompt": true,
+      "role": "system",
+      "content": "Write {{char}}'s next reply in a fictional chat between {{char}} and {{user}}.",
+      "identifier": "main"
+    },
+    {
+      "name": "Auxiliary Prompt",
+      "system_prompt": true,
+      "role": "system",
+      "content": "",
+      "identifier": "nsfw"
+    },
+    {
+      "identifier": "dialogueExamples",
+      "name": "Chat Examples",
+      "system_prompt": true,
+      "marker": true
+    },
+    {
+      "identifier": "chatHistory",
+      "name": "Chat History",
+      "system_prompt": true,
+      "marker": true
+    },
+    {
+      "identifier": "worldInfoBefore",
+      "name": "World Info (before)",
+      "system_prompt": true,
+      "marker": true
+    },
+    {
+      "identifier": "worldInfoAfter",
+      "name": "World Info (after)",
+      "system_prompt": true,
+      "marker": true
+    },
+    {
+      "identifier": "jailbreak",
+      "name": "Jailbreak",
+      "system_prompt": true,
+      "marker": true
+    }
+    // ……还有 char 描述、人格、persona 描述等 marker
+  ],
+
+  // 每个角色如何启用 / 排列这些片段
+  "prompt_order": [
+    {
+      "character_id": 100000,
+      "order": [
+        { "identifier": "main",             "enabled": true },
+        { "identifier": "worldInfoBefore",  "enabled": true },
+        { "identifier": "charDescription",  "enabled": true },
+        { "identifier": "charPersonality",  "enabled": true },
+        { "identifier": "scenario",         "enabled": true },
+        { "identifier": "enhanceDefinitions","enabled": false },
+        { "identifier": "nsfw",             "enabled": true },
+        { "identifier": "worldInfoAfter",   "enabled": true },
+        { "identifier": "dialogueExamples", "enabled": true },
+        { "identifier": "chatHistory",      "enabled": true },
+        { "identifier": "jailbreak",        "enabled": true }
+      ]
+    }
+  ],
+
+  // 一些格式化设置
+  "wi_format": "{0}",
+  "scenario_format": "{{scenario}}",
+  "personality_format": "{{personality}}",
+  "group_nudge_prompt": "[Write the next reply only as {{char}}.]",
+  "stream_openai": true,
+
+  "seed": -1,
+  "n": 1
+}

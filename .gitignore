@@ -1,0 +1,53 @@
+# OS / editors
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*.log
+*.tmp
+*.code-workspace
+
+# Archives / backups
+*.zip
+*.tar
+*.tar.gz
+*.tgz
+
+# Env / secrets
+*.env
+*.env.local
+**/*.env
+**/*.env.local
+
+# Frontend build & deps
+frontend/node_modules/
+frontend/.nuxt/
+frontend/.output/
+frontend/.cache/
+frontend/.vite/
+frontend/dist/
+frontend/.eslintcache
+
+# Backend build & data
+backend/bin/
+backend/server
+backend/uploads/
+backend/persona.db
+
+# Python / misc third-party dumps
+__pycache__/
+*.pyc
+novelai-python-main/
+
+# Tooling state
+coverage/
+.nyc_output/
+.npm/
+.pnpm-store/
+.yarn/
+
+# Ignore backup / history directories
+最新版/
+最终版本/
+最新备份/
+历代版本/
