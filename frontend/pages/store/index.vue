@@ -1,19 +1,19 @@
 <template>
   <section class="space-y-8">
-    <header class="glass-card p-8 animate-fade-up relative overflow-hidden">
-      <div class="absolute top-0 right-0 w-32 h-32 bg-indigo-500/20 rounded-full blur-3xl"></div>
+    <header class="card-soft p-8 animate-fade-up relative overflow-hidden">
+      <div class="absolute top-0 right-0 w-32 h-32 bg-accent-yellow/20 rounded-full blur-3xl"></div>
       <div class="relative z-10">
-        <h1 class="text-2xl font-bold text-white">平台充值</h1>
-        <p class="text-sm text-slate-400 mt-2 max-w-xl">
+        <h1 class="text-2xl font-bold text-charcoal-900">平台充值</h1>
+        <p class="text-sm text-charcoal-500 mt-2 max-w-xl">
           您在这里支付的金额会折算为平台内虚拟货币，用于后续与 AI 角色对话等功能消耗。
         </p>
       </div>
     </header>
 
-    <div class="glass-card p-8 animate-fade-up delay-100 space-y-6">
+    <div class="card-soft p-8 animate-fade-up delay-100 space-y-6">
       <div>
-        <h2 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
-          <span class="w-1.5 h-6 rounded-full bg-indigo-500"></span>
+        <h2 class="text-lg font-bold text-charcoal-900 mb-4 flex items-center gap-2">
+          <span class="w-1.5 h-6 rounded-full bg-accent-pink"></span>
           选择支持金额
         </h2>
         <StoreTipOptions
@@ -21,32 +21,32 @@
           @select="pay"
           :class="{ 'pointer-events-none opacity-50': !tipOptions?.amounts?.length }"
         />
-        <p v-if="tipOptionsLoading" class="mt-2 text-xs text-slate-400">加载可用打赏档位...</p>
+        <p v-if="tipOptionsLoading" class="mt-2 text-xs text-charcoal-400">加载可用打赏档位...</p>
         <div class="mt-4 flex flex-wrap gap-2 items-center">
-          <span class="text-sm text-slate-300">支付方式：</span>
+          <span class="text-sm text-charcoal-500">支付方式：</span>
           <button
             v-for="option in payTypes"
             :key="option.value"
             type="button"
-            class="px-3 py-1.5 rounded-full border text-sm"
-            :class="payType === option.value ? 'border-indigo-400 bg-indigo-500/20 text-indigo-100' : 'border-white/10 text-slate-300 hover:border-white/30'"
+            class="px-3 py-1.5 rounded-full border text-sm transition-colors"
+            :class="payType === option.value ? 'border-accent-pink bg-accent-pink/10 text-accent-pink' : 'border-charcoal-200 text-charcoal-500 hover:border-accent-pink/50 hover:text-charcoal-900'"
             @click="payType = option.value"
           >
             {{ option.label }}
           </button>
         </div>
         <div class="mt-4 flex flex-col sm:flex-row gap-3 items-start sm:items-center">
-          <label class="text-sm text-slate-300">自定义金额（元）</label>
+          <label class="text-sm text-charcoal-500">自定义金额（元）</label>
           <input
             v-model.number="customAmount"
             type="number"
             min="1"
             step="0.01"
-            class="rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm text-white w-full sm:w-48 focus:border-indigo-500 focus:outline-none"
+            class="glass-input w-full sm:w-48 text-sm"
             placeholder="输入金额"
           />
           <button
-            class="btn-primary text-sm px-4 py-2 rounded-full disabled:opacity-50 disabled:cursor-not-allowed"
+            class="btn-primary text-sm px-4 py-2 rounded-full disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-charcoal-900/10"
             :disabled="!customAmount || customAmount <= 0 || tipping"
             @click="pay(customAmount)"
           >
@@ -55,9 +55,9 @@
         </div>
       </div>
 
-      <p class="text-xs text-slate-400">当前汇率：1 元 = 1000 平台币</p>
-      <p v-if="statusMessage" class="text-sm text-emerald-300">{{ statusMessage }}</p>
-      <p v-if="errorMessage" class="text-sm text-rose-300">{{ errorMessage }}</p>
+      <p class="text-xs text-charcoal-400">当前汇率：1 元 = 1000 平台币</p>
+      <p v-if="statusMessage" class="text-sm text-status-success">{{ statusMessage }}</p>
+      <p v-if="errorMessage" class="text-sm text-status-error">{{ errorMessage }}</p>
     </div>
   </section>
 </template>

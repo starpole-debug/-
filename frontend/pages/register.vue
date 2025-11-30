@@ -1,25 +1,25 @@
 <template>
   <section class="mx-auto flex min-h-[70vh] max-w-md flex-col justify-center space-y-8">
     <header class="space-y-2 text-center">
-      <h1 class="text-3xl font-semibold">创建新账号</h1>
-      <p class="text-sm text-slate-500">填写用户名与密码后即可开始体验 AI 角色聊天。</p>
+      <h1 class="text-3xl font-display font-bold text-charcoal-900">创建新账号</h1>
+      <p class="text-sm text-charcoal-500">填写用户名与密码后即可开始体验 AI 角色聊天。</p>
     </header>
-    <form class="space-y-5 rounded-2xl border border-slate-200 p-6 shadow-sm" @submit.prevent="handleSubmit">
+    <form class="space-y-5 card-soft p-8" @submit.prevent="handleSubmit">
       <div class="space-y-2">
-        <label class="text-sm font-medium">用户名</label>
+        <label class="text-sm font-medium text-charcoal-700">用户名</label>
         <input
           v-model.trim="form.username"
-          class="w-full rounded-xl border border-slate-200 px-4 py-2 text-sm outline-none focus:border-slate-400"
+          class="glass-input"
           placeholder="your-name"
           autocomplete="username"
           required
         />
       </div>
       <div class="space-y-2">
-        <label class="text-sm font-medium">邮箱</label>
+        <label class="text-sm font-medium text-charcoal-700">邮箱</label>
         <input
           v-model.trim="form.email"
-          class="w-full rounded-xl border border-slate-200 px-4 py-2 text-sm outline-none focus:border-slate-400"
+          class="glass-input"
           placeholder="name@example.com"
           type="email"
           autocomplete="email"
@@ -27,11 +27,11 @@
         />
       </div>
       <div class="space-y-2">
-        <label class="text-sm font-medium flex items-center justify-between">
+        <label class="text-sm font-medium text-charcoal-700 flex items-center justify-between">
           验证码
           <button
             type="button"
-            class="text-xs text-primary hover:underline disabled:opacity-60 disabled:cursor-not-allowed"
+            class="text-xs text-charcoal-900 hover:text-accent-yellow font-bold hover:underline disabled:opacity-60 disabled:cursor-not-allowed transition-colors"
             :disabled="sendingCode || countdown > 0"
             @click="handleSendCode"
           >
@@ -40,28 +40,28 @@
         </label>
         <input
           v-model.trim="form.code"
-          class="w-full rounded-xl border border-slate-200 px-4 py-2 text-sm outline-none focus:border-slate-400"
+          class="glass-input"
           placeholder="请输入邮箱验证码"
           autocomplete="one-time-code"
           required
         />
       </div>
       <div class="space-y-2">
-        <label class="text-sm font-medium flex items-center justify-between">
-          昵称 <span class="text-xs text-slate-400">可选，默认与用户名一致</span>
+        <label class="text-sm font-medium text-charcoal-700 flex items-center justify-between">
+          昵称 <span class="text-xs text-charcoal-500">可选，默认与用户名一致</span>
         </label>
         <input
           v-model.trim="form.nickname"
-          class="w-full rounded-xl border border-slate-200 px-4 py-2 text-sm outline-none focus:border-slate-400"
+          class="glass-input"
           placeholder="展示名称"
           autocomplete="nickname"
         />
       </div>
       <div class="space-y-2">
-        <label class="text-sm font-medium">密码</label>
+        <label class="text-sm font-medium text-charcoal-700">密码</label>
         <input
           v-model="form.password"
-          class="w-full rounded-xl border border-slate-200 px-4 py-2 text-sm outline-none focus:border-slate-400"
+          class="glass-input"
           placeholder="请输入不少于 6 位"
           type="password"
           autocomplete="new-password"
@@ -70,10 +70,10 @@
         />
       </div>
       <div class="space-y-2">
-        <label class="text-sm font-medium">确认密码</label>
+        <label class="text-sm font-medium text-charcoal-700">确认密码</label>
         <input
           v-model="form.confirm"
-          class="w-full rounded-xl border border-slate-200 px-4 py-2 text-sm outline-none focus:border-slate-400"
+          class="glass-input"
           placeholder="再次输入密码"
           type="password"
           autocomplete="new-password"
@@ -81,19 +81,19 @@
           minlength="6"
         />
       </div>
-      <p v-if="errorMessage" class="text-sm text-red-500">
+      <p v-if="errorMessage" class="text-sm text-status-error text-center">
         {{ errorMessage }}
       </p>
       <button
         type="submit"
-        class="w-full rounded-xl bg-primary py-2 text-sm font-medium text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
+        class="w-full btn-primary py-3 shadow-lg shadow-charcoal-900/10"
         :disabled="isAuthenticating"
       >
         {{ isAuthenticating ? '注册中...' : '创建账号并登录' }}
       </button>
-      <p class="text-center text-sm text-slate-500">
+      <p class="text-center text-sm text-charcoal-500">
         已有账号？
-        <NuxtLink to="/login" class="text-primary">返回登录</NuxtLink>
+        <NuxtLink to="/login" class="text-charcoal-900 hover:text-accent-yellow font-bold decoration-accent-yellow underline decoration-2 underline-offset-2 transition-colors">返回登录</NuxtLink>
       </p>
     </form>
   </section>

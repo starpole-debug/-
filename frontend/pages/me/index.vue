@@ -1,233 +1,295 @@
 <template>
-  <section class="space-y-10">
-    <!-- Hero -->
-    <header class="hero-card relative overflow-hidden rounded-3xl border border-white/10 p-6 md:p-8">
-      <div class="pointer-events-none absolute inset-y-0 right-0 w-1/2 opacity-60 blur-3xl" :style="heroStyle"></div>
-      <div class="relative flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
-        <div class="flex items-center gap-5">
-          <div class="relative">
-            <img :src="home?.user?.avatar_url || defaultAvatar" class="h-20 w-20 rounded-2xl border-2 border-white/40 object-cover" alt="avatar" />
-            <span class="pulse-dot"></span>
+  <div class="min-h-screen pb-20 space-y-8">
+    <!-- Profile Header & Assets (Bento Row 1) -->
+    <section class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <!-- Identity Card -->
+      <div class="lg:col-span-2 card-soft p-0 overflow-hidden relative group">
+        <!-- Abstract Cover -->
+        <div class="h-32 bg-gradient-to-r from-accent-pink/20 via-bg-cream-200 to-accent-yellow/20 relative">
+          <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-30"></div>
+          <div class="absolute top-4 right-4 flex gap-2">
+            <NuxtLink to="/me/settings" class="p-2 rounded-full bg-white/50 hover:bg-white text-charcoal-600 transition-all backdrop-blur-sm" title="设置">
+              <div class="i-ph-gear-six-fill text-lg" />
+            </NuxtLink>
+            <NuxtLink to="/notifications" class="p-2 rounded-full bg-white/50 hover:bg-white text-charcoal-600 transition-all backdrop-blur-sm relative" title="通知">
+              <div class="i-ph-bell-fill text-lg" />
+              <span class="absolute top-2 right-2 w-2 h-2 bg-status-error rounded-full border border-white" v-if="false"></span>
+            </NuxtLink>
           </div>
-          <div>
-            <p class="text-sm text-slate-200/70">欢迎回来</p>
-            <h1 class="text-3xl font-semibold text-white tracking-tight">
-              {{ home?.user?.nickname || auth.user.value?.nickname || '旅者' }}
-            </h1>
-            <p class="text-xs text-slate-200/60 mt-1">ID: {{ home?.user?.id || auth.user.value?.id }}</p>
-            <p class="text-xs text-slate-200/60">今日心情指数：{{ engagementScore }} / 100</p>
-          </div>
         </div>
-        <div class="flex flex-wrap gap-3">
-          <NuxtLink class="btn-secondary" to="/me/settings">管理个人资料</NuxtLink>
-          <NuxtLink class="btn-secondary" to="/me/wallet">虚拟钱包</NuxtLink>
-          <NuxtLink class="btn-primary" to="/creator">
-            {{ home?.creator?.has_creator_access ? '进入创作者中心' : '成为创作者' }}
-          </NuxtLink>
-        </div>
-      </div>
-      <div class="mt-6 flex flex-wrap gap-3">
-        <button
-          v-for="action in quickActions"
-          :key="action.label"
-          class="action-chip"
-          @click="go(action.to)"
-        >
-          <span class="text-base">{{ action.icon }}</span>
-          <span>{{ action.label }}</span>
-        </button>
-      </div>
-      <p v-if="errorMessage" class="mt-4 text-sm text-rose-300">{{ errorMessage }}</p>
-    </header>
-
-    <!-- Stats -->
-    <section class="grid gap-4 md:grid-cols-3">
-      <div v-for="card in statCards" :key="card.title" class="glass-card relative overflow-hidden">
-        <div class="absolute inset-0 opacity-50" :style="card.bg"></div>
-        <div class="relative">
-          <p class="text-sm text-slate-200/70">{{ card.title }}</p>
-          <p class="mt-2 text-3xl font-semibold text-white">{{ card.value }}</p>
-          <p class="text-xs text-slate-200/60">{{ card.hint }}</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- Interactive widgets -->
-    <section class="grid gap-6 lg:grid-cols-3">
-      <div class="glass-card col-span-2">
-        <header class="flex items-center justify-between text-white">
-          <div>
-            <h2 class="text-lg font-semibold">收藏内容</h2>
-            <p class="text-sm text-slate-200/70">快速回到已收藏的灵感。</p>
-          </div>
-          <NuxtLink class="link text-sm" to="/me/favorites">查看全部</NuxtLink>
-        </header>
-        <div v-if="loading" class="mt-5 text-sm text-slate-200/70">加载中...</div>
-        <div v-else-if="!home?.favorites?.length" class="mt-5 text-sm text-slate-200/70">还没有收藏，去社区探索吧。</div>
-        <div v-else class="mt-5 space-y-4">
-          <CommunityPostCard v-for="post in home?.favorites || []" :key="post.id" :post="post" />
-        </div>
-      </div>
-
-      <div class="glass-card space-y-6">
-        <div>
-          <h3 class="text-sm text-slate-200/70">创作者钱包快照</h3>
-          <p class="mt-2 text-3xl font-semibold text-white">{{ home?.creator?.wallet_balance ?? 0 }}</p>
-          <p class="text-xs text-slate-200/60">可提取余额</p>
-        </div>
-        <div class="relative flex items-center justify-center">
-          <div class="ring-progress">
-            <svg viewBox="0 0 120 120">
-              <defs>
-                <linearGradient id="gradientRing" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stop-color="#a855f7" />
-                  <stop offset="100%" stop-color="#f472b6" />
-                </linearGradient>
-              </defs>
-              <circle cx="60" cy="60" r="52" />
-              <circle
-                cx="60"
-                cy="60"
-                r="52"
-                :style="{ strokeDashoffset: 326 - 326 * creatorProgress }"
+        
+        <div class="px-8 pb-8 relative">
+          <!-- Avatar -->
+          <div class="absolute -top-12 left-8">
+            <div class="relative">
+              <img 
+                :src="home?.user?.avatar_url || defaultAvatar" 
+                class="h-24 w-24 rounded-2xl border-4 border-white shadow-lg object-cover bg-white" 
+                alt="avatar" 
               />
-            </svg>
-            <div class="ring-label">
-              <p class="text-xs text-slate-200/70">角色发布率</p>
-              <p class="text-xl font-semibold text-white">{{ Math.round(creatorProgress * 100) }}%</p>
+              <div class="absolute bottom-1 right-1 w-5 h-5 bg-status-success rounded-full border-2 border-white" title="在线"></div>
+            </div>
+          </div>
+
+          <!-- Info -->
+          <div class="mt-14 flex flex-col md:flex-row md:items-end justify-between gap-4">
+            <div>
+              <h1 class="text-3xl font-display font-bold text-charcoal-900 tracking-tight flex items-center gap-2">
+                {{ home?.user?.nickname || auth.user.value?.nickname || '旅者' }}
+                <span class="px-2 py-0.5 rounded-md bg-charcoal-100 text-charcoal-500 text-xs font-bold uppercase tracking-wider">LV.{{ userLevel }}</span>
+              </h1>
+              <div class="flex items-center gap-3 mt-2 text-sm text-charcoal-500">
+                <span class="font-mono bg-bg-cream-200 px-2 py-0.5 rounded text-charcoal-600">ID: {{ home?.user?.id || auth.user.value?.id }}</span>
+                <span class="flex items-center gap-1">
+                  <div class="i-ph-smiley text-accent-pink" />
+                  心情指数 {{ engagementScore }}
+                </span>
+              </div>
+              <p class="mt-3 text-charcoal-600 max-w-md text-sm leading-relaxed">
+                {{ home?.user?.bio || '这个家伙很懒，什么都没有写...' }}
+              </p>
+            </div>
+            
+            <!-- Quick Stats -->
+            <div class="flex gap-6 border-t md:border-t-0 md:border-l border-charcoal-100 pt-4 md:pt-0 md:pl-6">
+              <div class="text-center">
+                <div class="text-xl font-bold text-charcoal-900">{{ home?.stats?.post_total || 0 }}</div>
+                <div class="text-xs text-charcoal-400 font-medium uppercase tracking-wide">帖子</div>
+              </div>
+              <div class="text-center">
+                <div class="text-xl font-bold text-charcoal-900">{{ home?.stats?.favorite_total || 0 }}</div>
+                <div class="text-xs text-charcoal-400 font-medium uppercase tracking-wide">收藏</div>
+              </div>
+              <div class="text-center">
+                <div class="text-xl font-bold text-charcoal-900">{{ home?.stats?.session_total || 0 }}</div>
+                <div class="text-xs text-charcoal-400 font-medium uppercase tracking-wide">会话</div>
+              </div>
             </div>
           </div>
         </div>
-        <NuxtLink class="btn-primary w-full justify-center" to="/creator">激活创作者能力</NuxtLink>
-      </div>
-    </section>
-
-    <!-- Feed sections -->
-    <section class="grid gap-6 lg:grid-cols-2">
-      <div class="glass-card">
-        <header class="flex items-center justify-between text-white">
-          <div>
-            <h2 class="text-lg font-semibold">近期浏览</h2>
-            <p class="text-sm text-slate-200/70">记录你最近看过的帖子，便于继续阅读。</p>
-          </div>
-          <NuxtLink class="link text-sm" to="/community">继续逛逛</NuxtLink>
-        </header>
-        <div v-if="loading" class="mt-5 text-sm text-slate-200/70">加载中...</div>
-        <div v-else-if="!home?.recent_views?.length" class="mt-5 text-sm text-slate-200/70">暂无浏览记录。</div>
-        <div v-else class="mt-5 space-y-4">
-          <CommunityPostCard v-for="post in home?.recent_views || []" :key="post.id" :post="post" />
-        </div>
       </div>
 
-      <div class="glass-card">
-        <header class="flex flex-wrap items-center justify-between gap-3 text-white">
-          <div>
-            <h2 class="text-lg font-semibold">我的帖子</h2>
-            <p class="text-sm text-slate-200/70">展示你在社区发表的内容。</p>
-          </div>
-          <NuxtLink class="btn-primary" to="/community/new">发布新帖</NuxtLink>
-        </header>
-        <div v-if="loading" class="mt-5 text-sm text-slate-200/70">加载中...</div>
-        <div v-else-if="!home?.my_posts?.length" class="mt-5 text-sm text-slate-200/70">还没有发表内容，快去分享吧！</div>
-        <div v-else class="mt-5 space-y-4">
-          <CommunityPostCard v-for="post in home?.my_posts || []" :key="post.id" :post="post" />
-        </div>
-      </div>
-    </section>
-
-    <!-- Creator CTA -->
-    <section class="rounded-3xl border border-white/10 bg-gradient-to-r from-indigo-500/30 via-purple-500/30 to-rose-500/30 p-6 shadow-xl shadow-indigo-900/30">
-      <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between text-white">
+      <!-- Wallet & Assets Card -->
+      <div class="card-soft p-6 flex flex-col justify-between relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-40 h-40 bg-accent-yellow/10 rounded-full blur-3xl -mr-10 -mt-10 pointer-events-none"></div>
+        
         <div>
-          <p class="text-sm uppercase tracking-[0.3em] text-white/80">Creator Journey</p>
-          <h2 class="mt-2 text-2xl font-semibold">创作者成长引导</h2>
-          <p class="text-sm text-white/80">
-            已创建 {{ home?.creator?.roles_total || 0 }} 个角色，发布 {{ home?.creator?.published_roles || 0 }} 个，创作者钱包可用余额
-            {{ home?.creator?.wallet_balance || 0 }}。
-          </p>
+          <div class="flex items-center justify-between mb-6">
+            <h2 class="text-lg font-bold text-charcoal-900 flex items-center gap-2">
+              <div class="i-ph-wallet-fill text-accent-yellow-dark" />
+              我的资产
+            </h2>
+            <NuxtLink to="/me/wallet" class="text-xs font-medium text-charcoal-500 hover:text-charcoal-900 flex items-center gap-1">
+              明细 <div class="i-ph-caret-right" />
+            </NuxtLink>
+          </div>
+
+          <div class="space-y-4">
+            <div class="bg-bg-cream-100 rounded-xl p-4 border border-charcoal-100">
+              <div class="text-xs text-charcoal-500 mb-1">平台币余额</div>
+              <div class="text-3xl font-bold text-charcoal-900 font-display flex items-baseline gap-1">
+                {{ home?.assets?.balance?.toLocaleString() ?? 0 }}
+                <span class="text-sm font-normal text-charcoal-400">Coins</span>
+              </div>
+            </div>
+
+            <div class="flex gap-3">
+              <div class="flex-1 bg-white border border-charcoal-100 rounded-xl p-3 flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-accent-pink/10 flex items-center justify-center text-accent-pink">
+                  <div class="i-ph-ticket-fill text-xl" />
+                </div>
+                <div>
+                  <div class="text-lg font-bold text-charcoal-900">{{ home?.assets?.monthly_tickets ?? 0 }}</div>
+                  <div class="text-[10px] text-charcoal-400 uppercase">月票</div>
+                </div>
+              </div>
+              <div class="flex-1 bg-white border border-charcoal-100 rounded-xl p-3 flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-accent-yellow/10 flex items-center justify-center text-accent-yellow-dark">
+                  <div class="i-ph-gift-fill text-xl" />
+                </div>
+                <div>
+                  <div class="text-lg font-bold text-charcoal-900">0</div>
+                  <div class="text-[10px] text-charcoal-400 uppercase">道具</div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-        <NuxtLink class="btn-primary bg-white/90 text-slate-800 hover:bg-white" to="/creator">前往创作者中心</NuxtLink>
+
+        <div class="mt-6 pt-6 border-t border-charcoal-100">
+          <NuxtLink to="/store" class="w-full btn-primary justify-center py-3 shadow-xl shadow-accent-yellow/20">
+            <div class="i-ph-plus-circle-fill" />
+            立即充值
+          </NuxtLink>
+        </div>
       </div>
     </section>
-  </section>
+
+    <!-- Creator & Tools (Bento Row 2) -->
+    <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <!-- Creator Journey Banner -->
+      <div class="lg:col-span-3 rounded-3xl p-1 bg-gradient-to-br from-charcoal-900 via-charcoal-800 to-charcoal-900 shadow-xl shadow-charcoal-900/10 group relative overflow-hidden">
+        <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-20"></div>
+        <div class="absolute right-0 top-0 bottom-0 w-1/2 bg-gradient-to-l from-accent-pink/20 to-transparent"></div>
+        
+        <div class="bg-charcoal-900/50 backdrop-blur-sm h-full rounded-[20px] p-6 md:p-8 flex flex-col md:flex-row items-center justify-between gap-6 relative z-10">
+          <div class="flex-1">
+            <div class="flex items-center gap-2 mb-2">
+              <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-widest bg-accent-yellow text-charcoal-900">Creator Studio</span>
+              <span class="text-charcoal-400 text-xs">Level {{ creatorLevel }}</span>
+            </div>
+            <h3 class="text-2xl font-bold text-white mb-2">释放你的创造力</h3>
+            <p class="text-charcoal-300 text-sm max-w-lg">
+              已创建 <span class="text-white font-bold">{{ home?.creator?.roles_total || 0 }}</span> 个角色，
+              发布 <span class="text-white font-bold">{{ home?.creator?.published_roles || 0 }}</span> 个。
+              <span v-if="(home?.creator?.wallet_balance || 0) > 0">
+                累计收益 <span class="text-accent-yellow font-bold">{{ home?.creator?.wallet_balance }}</span>。
+              </span>
+              <span v-else>
+                开启创作之旅，赚取收益。
+              </span>
+            </p>
+          </div>
+          <div class="flex items-center gap-4">
+             <div class="hidden md:block text-right mr-4">
+                <div class="text-xs text-charcoal-400 mb-1">发布进度</div>
+                <div class="w-32 h-2 bg-charcoal-700 rounded-full overflow-hidden">
+                  <div class="h-full bg-gradient-to-r from-accent-yellow to-accent-pink" :style="{ width: `${creatorProgress * 100}%` }"></div>
+                </div>
+             </div>
+             <NuxtLink to="/creator" class="px-6 py-3 rounded-xl bg-white text-charcoal-900 font-bold hover:bg-bg-cream-100 transition-colors flex items-center gap-2 shadow-lg">
+               进入控制台
+               <div class="i-ph-arrow-right-bold" />
+             </NuxtLink>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Actions Grid -->
+      <div class="grid grid-cols-2 gap-3">
+        <NuxtLink to="/me/favorites" class="card-soft p-4 flex flex-col items-center justify-center gap-2 hover:-translate-y-1 transition-transform cursor-pointer group">
+          <div class="w-10 h-10 rounded-full bg-bg-cream-200 group-hover:bg-accent-yellow/20 flex items-center justify-center text-charcoal-600 group-hover:text-charcoal-900 transition-colors">
+            <div class="i-ph-folder-star-fill text-xl" />
+          </div>
+          <span class="text-xs font-medium text-charcoal-600">收藏夹</span>
+        </NuxtLink>
+        <NuxtLink to="/me/history" class="card-soft p-4 flex flex-col items-center justify-center gap-2 hover:-translate-y-1 transition-transform cursor-pointer group">
+          <div class="w-10 h-10 rounded-full bg-bg-cream-200 group-hover:bg-accent-pink/20 flex items-center justify-center text-charcoal-600 group-hover:text-charcoal-900 transition-colors">
+            <div class="i-ph-clock-counter-clockwise-fill text-xl" />
+          </div>
+          <span class="text-xs font-medium text-charcoal-600">浏览历史</span>
+        </NuxtLink>
+        <NuxtLink to="/me/settings" class="card-soft p-4 flex flex-col items-center justify-center gap-2 hover:-translate-y-1 transition-transform cursor-pointer group">
+          <div class="w-10 h-10 rounded-full bg-bg-cream-200 group-hover:bg-charcoal-100 flex items-center justify-center text-charcoal-600 group-hover:text-charcoal-900 transition-colors">
+            <div class="i-ph-sliders-horizontal-fill text-xl" />
+          </div>
+          <span class="text-xs font-medium text-charcoal-600">偏好设置</span>
+        </NuxtLink>
+        <button class="card-soft p-4 flex flex-col items-center justify-center gap-2 hover:-translate-y-1 transition-transform cursor-pointer group" @click="logout">
+          <div class="w-10 h-10 rounded-full bg-bg-cream-200 group-hover:bg-status-error/10 flex items-center justify-center text-charcoal-600 group-hover:text-status-error transition-colors">
+            <div class="i-ph-sign-out-fill text-xl" />
+          </div>
+          <span class="text-xs font-medium text-charcoal-600 group-hover:text-status-error">退出登录</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- Content Tabs (Bento Row 3) -->
+    <section class="card-soft min-h-[500px]">
+      <div class="border-b border-charcoal-100 px-6 pt-6">
+        <div class="flex items-center gap-8">
+          <button 
+            v-for="tab in tabs" 
+            :key="tab.id"
+            @click="activeTab = tab.id"
+            class="pb-4 text-sm font-bold transition-all relative"
+            :class="activeTab === tab.id ? 'text-charcoal-900' : 'text-charcoal-400 hover:text-charcoal-600'"
+          >
+            {{ tab.label }}
+            <span 
+              v-if="activeTab === tab.id" 
+              class="absolute bottom-0 left-0 right-0 h-0.5 bg-accent-yellow rounded-t-full"
+            ></span>
+          </button>
+        </div>
+      </div>
+
+      <div class="p-6">
+        <div v-if="loading" class="py-20 text-center text-charcoal-400 flex flex-col items-center gap-3">
+          <div class="i-svg-spinners-90-ring-with-bg text-2xl" />
+          <p class="text-sm">加载数据中...</p>
+        </div>
+
+        <div v-else>
+          <!-- Recent Views -->
+          <div v-if="activeTab === 'recent'" class="space-y-6">
+            <div v-if="!home?.recent_views?.length" class="py-20 text-center text-charcoal-400">
+              <div class="i-ph-footprints-fill text-4xl mx-auto mb-3 opacity-20" />
+              <p class="text-sm">暂无浏览记录，去<NuxtLink to="/community" class="text-accent-pink hover:underline">社区</NuxtLink>逛逛吧。</p>
+            </div>
+            <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <CommunityPostCard v-for="post in home?.recent_views" :key="post.id" :post="post" />
+            </div>
+          </div>
+
+          <!-- Favorites -->
+          <div v-if="activeTab === 'favorites'" class="space-y-6">
+             <div v-if="!home?.favorites?.length" class="py-20 text-center text-charcoal-400">
+              <div class="i-ph-star-fill text-4xl mx-auto mb-3 opacity-20" />
+              <p class="text-sm">还没有收藏任何内容。</p>
+            </div>
+            <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <CommunityPostCard v-for="post in home?.favorites" :key="post.id" :post="post" />
+            </div>
+          </div>
+
+          <!-- My Posts -->
+          <div v-if="activeTab === 'posts'" class="space-y-6">
+             <div v-if="!home?.my_posts?.length" class="py-20 text-center text-charcoal-400">
+              <div class="i-ph-pencil-simple-slash-fill text-4xl mx-auto mb-3 opacity-20" />
+              <p class="text-sm">你还没有发布过任何帖子。</p>
+              <NuxtLink to="/community/new" class="btn-primary mt-4 text-xs">发布第一条动态</NuxtLink>
+            </div>
+            <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <CommunityPostCard v-for="post in home?.my_posts" :key="post.id" :post="post" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
 </template>
 
 <script setup lang="ts">
-import type { UserHomePayload, PaymentOrder } from '@/types'
+import type { UserHomePayload } from '@/types'
 
 definePageMeta({
   middleware: ['auth'],
 })
 
 const api = useApi()
-const router = useRouter()
 const auth = useAuth()
+const router = useRouter()
 const home = ref<UserHomePayload | null>(null)
 const loading = ref(false)
-const errorMessage = ref('')
-const defaultAvatar = 'https://placehold.co/80x80?text=Me'
-const accentPool = [
-  ['#a855f7', '#6366f1'],
-  ['#4ade80', '#22d3ee'],
-  ['#f97316', '#f43f5e'],
-]
-const heroStyle = computed(() => {
-  const palette = accentPool[new Date().getHours() % accentPool.length]
-  return `background: radial-gradient(circle at 30% 20%, ${palette[0]}55, transparent), radial-gradient(circle at 80% 0%, ${palette[1]}88, transparent)`
-})
+const defaultAvatar = 'https://placehold.co/150x150?text=Me'
 
-const quickActions = [
-  { label: '收藏夹', icon: '📁', to: '/me/favorites' },
-  { label: '我的钱包', icon: '💰', to: '/me/wallet' },
-  { label: '充值记录', icon: '🧾', to: '/me/payments' },
-  { label: '创作者中心', icon: '🚀', to: '/creator' },
-  { label: '通知中心', icon: '🔔', to: '/notifications' },
+const activeTab = ref('recent')
+const tabs = [
+  { id: 'recent', label: '近期浏览' },
+  { id: 'favorites', label: '我的收藏' },
+  { id: 'posts', label: '我的发布' },
 ]
-
-const statCards = computed(() => [
-  {
-    title: '虚拟货币余额',
-    value: home.value?.assets?.balance ?? 0,
-    hint: '平台内可用代币',
-    bg: 'background: linear-gradient(135deg, rgba(99,102,241,0.2), rgba(56,189,248,0.2))',
-  },
-  {
-    title: '本月权益',
-    value: home.value?.assets?.monthly_tickets ?? 0,
-    hint: '剩余月票',
-    bg: 'background: linear-gradient(135deg, rgba(34,197,94,0.2), rgba(252,211,77,0.2))',
-  },
-  {
-    title: '聊天会话',
-    value: home.value?.stats?.session_total ?? 0,
-    hint: '最近活跃记录',
-    bg: 'background: linear-gradient(135deg, rgba(248,113,113,0.2), rgba(251,191,36,0.2))',
-  },
-  {
-    title: '收藏帖子',
-    value: home.value?.stats?.favorite_total ?? 0,
-    hint: '来自个人收藏夹',
-    bg: 'background: linear-gradient(135deg, rgba(192,38,211,0.2), rgba(59,130,246,0.2))',
-  },
-  {
-    title: '近期浏览',
-    value: home.value?.stats?.recent_view_total ?? 0,
-    hint: '记录最近的足迹',
-    bg: 'background: linear-gradient(135deg, rgba(14,165,233,0.2), rgba(236,72,153,0.2))',
-  },
-  {
-    title: '已发布帖子',
-    value: home.value?.stats?.post_total ?? 0,
-    hint: '你的创作数量',
-    bg: 'background: linear-gradient(135deg, rgba(248,250,252,0.2), rgba(110,231,183,0.2))',
-  },
-])
 
 const engagementScore = computed(() => {
   const stats = home.value?.stats
   if (!stats) return 40
   const base = (stats.favorite_total ?? 0) * 8 + (stats.session_total ?? 0) * 5 + (stats.recent_view_total ?? 0) * 4
   return Math.min(100, Math.max(20, base))
+})
+
+const userLevel = computed(() => {
+  return Math.floor(engagementScore.value / 10) + 1
 })
 
 const creatorProgress = computed(() => {
@@ -237,18 +299,29 @@ const creatorProgress = computed(() => {
   return Math.min(1, published / total)
 })
 
-const go = (path: string) => router.push(path)
+const creatorLevel = computed(() => {
+  const published = home.value?.creator?.published_roles ?? 0
+  if (published > 10) return 3
+  if (published > 3) return 2
+  return 1
+})
 
 const load = async () => {
   loading.value = true
-  errorMessage.value = ''
   try {
     const res = await api.get<{ data: UserHomePayload }>('/me/home')
     home.value = res.data
-  } catch (error: any) {
-    errorMessage.value = error?.data?.error || error?.message || '无法加载个人主页数据，请稍后再试'
+  } catch (error) {
+    console.error('Failed to load profile', error)
   } finally {
     loading.value = false
+  }
+}
+
+const logout = async () => {
+  if (confirm('确定要退出登录吗？')) {
+    auth.logout()
+    router.push('/login')
   }
 }
 
@@ -256,80 +329,9 @@ onMounted(load)
 </script>
 
 <style scoped>
-.btn-primary {
-  @apply inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2 text-sm font-semibold text-white shadow hover:opacity-90 transition-all;
-}
-.btn-secondary {
-  @apply inline-flex items-center rounded-full border border-white/30 px-5 py-2 text-sm text-white/80 hover:border-white/60 transition;
-}
-.hero-card {
-  background: rgba(15, 23, 42, 0.6);
-  box-shadow: 0 25px 80px rgba(15, 23, 42, 0.45);
-}
-.glass-card {
-  @apply relative rounded-3xl border border-white/10 p-6;
-  background: rgba(15, 23, 42, 0.55);
-  box-shadow: 0 10px 40px rgba(15, 23, 42, 0.3);
-}
-.action-chip {
-  @apply inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/10 px-4 py-2 text-xs text-white/80 backdrop-blur transition hover:bg-white/20;
-}
-.pulse-dot {
-  position: absolute;
-  right: -4px;
-  bottom: -4px;
-  width: 14px;
-  height: 14px;
-  border-radius: 999px;
-  background: #34d399;
-  box-shadow: 0 0 10px #34d399;
-  animation: pulse 2s infinite;
-}
-.ring-progress {
-  position: relative;
-  width: 140px;
-  height: 140px;
-}
-.ring-progress svg {
-  width: 100%;
-  height: 100%;
-  transform: rotate(-90deg);
-}
-.ring-progress circle {
-  fill: none;
-  stroke-width: 6px;
-  stroke: rgba(148, 163, 184, 0.2);
-  stroke-linecap: round;
-}
-.ring-progress circle:last-child {
-  stroke: url(#gradientRing);
-  stroke-dasharray: 326;
-  stroke-dashoffset: 326;
-  transition: stroke-dashoffset 0.8s ease;
-}
-.ring-label {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-.link {
-  @apply text-primary hover:text-white transition;
-}
-@keyframes pulse {
-  0% {
-    transform: scale(0.8);
-    opacity: 0.6;
-  }
-  50% {
-    transform: scale(1);
-    opacity: 1;
-  }
-  100% {
-    transform: scale(0.8);
-    opacity: 0.6;
-  }
+/* Custom Scrollbar for Bento Grid if needed */
+.i-ph-gear-six-fill, .i-ph-bell-fill, .i-ph-smiley, .i-ph-wallet-fill, .i-ph-caret-right, .i-ph-ticket-fill, .i-ph-gift-fill, .i-ph-plus-circle-fill, .i-ph-arrow-right-bold, .i-ph-folder-star-fill, .i-ph-clock-counter-clockwise-fill, .i-ph-sliders-horizontal-fill, .i-ph-sign-out-fill, .i-ph-footprints-fill, .i-ph-star-fill, .i-ph-pencil-simple-slash-fill {
+  display: inline-block;
+  vertical-align: middle;
 }
 </style>

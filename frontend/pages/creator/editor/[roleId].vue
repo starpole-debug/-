@@ -1,25 +1,25 @@
 <template>
-  <section class="flex flex-col lg:flex-row gap-6 text-slate-100 items-start">
+  <section class="flex flex-col lg:flex-row gap-6 text-charcoal-900 items-start">
     <!-- Left Sidebar: Basic Info -->
-    <aside class="w-full lg:w-80 flex-shrink-0 flex flex-col gap-4 bg-slate-900/80 p-6 rounded-3xl shadow-lg lg:sticky lg:top-24 max-h-[calc(100vh-8rem)] overflow-y-auto custom-scrollbar">
+    <aside class="w-full lg:w-80 flex-shrink-0 flex flex-col gap-4 card-soft p-6 rounded-3xl shadow-lg lg:sticky lg:top-24 max-h-[calc(100vh-8rem)] overflow-y-auto custom-scrollbar">
       <header>
         <h1 class="text-xl font-semibold">{{ isNew ? '创建角色' : '编辑角色' }}</h1>
-        <p class="text-xs text-slate-400 mt-1">配置角色基础信息</p>
+        <p class="text-xs text-charcoal-500 mt-1">配置角色基础信息</p>
       </header>
 
       <div class="space-y-4">
         <div>
-          <label class="text-xs text-slate-400">角色名</label>
-          <input v-model.trim="form.name" class="mt-1 w-full rounded-xl border border-slate-700 bg-slate-900 px-4 py-2 text-sm text-white focus:border-primary focus:outline-none" required placeholder="如：星际航行家" />
+          <label class="text-xs text-charcoal-500">角色名</label>
+          <input v-model.trim="form.name" class="mt-1 glass-input text-sm" required placeholder="如：星际航行家" />
         </div>
         <div>
-          <label class="text-xs text-slate-400">头像 URL</label>
-          <input v-model.trim="form.avatar_url" class="mt-1 w-full rounded-xl border border-slate-700 bg-slate-900 px-4 py-2 text-sm text-white focus:border-primary focus:outline-none" placeholder="https://example.com/avatar.png" />
+          <label class="text-xs text-charcoal-500">头像 URL</label>
+          <input v-model.trim="form.avatar_url" class="mt-1 glass-input text-sm" placeholder="https://example.com/avatar.png" />
           <div class="mt-2 flex items-center gap-3 flex-wrap">
-            <input ref="avatarFileRef" type="file" accept="image/*" class="text-xs text-slate-300" @change="onAvatarFileChange" />
+            <input ref="avatarFileRef" type="file" accept="image/*" class="text-xs text-charcoal-500" @change="onAvatarFileChange" />
             <button
               type="button"
-              class="px-3 py-1.5 rounded-lg border border-slate-700 bg-slate-800 text-xs text-white hover:border-primary hover:text-primary transition-colors disabled:opacity-50"
+              class="px-3 py-1.5 rounded-lg border border-charcoal-200 bg-white text-xs text-charcoal-600 hover:border-accent-yellow hover:text-charcoal-900 transition-colors disabled:opacity-50"
               :disabled="avatarUploading"
               @click="uploadAvatarFile()"
             >
@@ -27,49 +27,49 @@
             </button>
           </div>
           <p v-if="avatarUploadError" class="text-[11px] text-rose-400 mt-1">{{ avatarUploadError }}</p>
-          <div v-if="form.avatar_url" class="mt-2 flex items-center gap-2 text-xs text-slate-400">
-            <img :src="avatarPreview" class="h-12 w-12 rounded-lg object-cover border border-slate-700" alt="角色头像预览" />
+          <div v-if="form.avatar_url" class="mt-2 flex items-center gap-2 text-xs text-charcoal-500">
+            <img :src="avatarPreview" class="h-12 w-12 rounded-lg object-cover border border-charcoal-200" alt="角色头像预览" />
             <span class="truncate">{{ form.avatar_url }}</span>
           </div>
         </div>
         <div>
-          <label class="text-xs text-slate-400">短描述</label>
-          <textarea v-model="form.description" class="mt-1 h-24 w-full rounded-xl border border-slate-700 bg-slate-900 px-4 py-2 text-sm text-white focus:border-primary focus:outline-none resize-none" placeholder="一句话介绍角色定位" />
+          <label class="text-xs text-charcoal-500">短描述</label>
+          <textarea v-model="form.description" class="mt-1 h-24 glass-input text-sm resize-none" placeholder="一句话介绍角色定位" />
         </div>
         <div>
-          <label class="text-xs text-slate-400">标签</label>
-          <input v-model="form.tags" class="mt-1 w-full rounded-xl border border-slate-700 bg-slate-900 px-4 py-2 text-sm text-white focus:border-primary focus:outline-none" placeholder="塔罗, 未来, 温柔" />
+          <label class="text-xs text-charcoal-500">标签</label>
+          <input v-model="form.tags" class="mt-1 glass-input text-sm" placeholder="塔罗, 未来, 温柔" />
         </div>
         <div>
-          <label class="text-xs text-slate-400">能力/特质</label>
-          <input v-model="form.abilities" class="mt-1 w-full rounded-xl border border-slate-700 bg-slate-900 px-4 py-2 text-sm text-white focus:border-primary focus:outline-none" placeholder="共情, 讲故事" />
+          <label class="text-xs text-charcoal-500">能力/特质</label>
+          <input v-model="form.abilities" class="mt-1 glass-input text-sm" placeholder="共情, 讲故事" />
         </div>
       </div>
 
-      <div class="mt-auto space-y-3 pt-4 border-t border-slate-800">
+      <div class="mt-auto space-y-3 pt-4 border-t border-charcoal-100">
         <p v-if="errorMessage" class="text-xs text-rose-500">{{ errorMessage }}</p>
         <p v-if="successMessage" class="text-xs text-emerald-500">{{ successMessage }}</p>
         <button
           @click="submit"
-          class="w-full rounded-xl bg-primary py-2.5 text-sm font-medium text-white hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          class="w-full rounded-xl btn-primary py-2.5 text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           :disabled="submitting"
         >
           {{ submitting ? '保存中...' : '保存角色' }}
         </button>
-        <NuxtLink to="/creator/roles" class="block text-center text-xs text-slate-400 hover:text-white transition-colors">返回列表</NuxtLink>
+        <NuxtLink to="/creator/roles" class="block text-center text-xs text-charcoal-400 hover:text-charcoal-900 transition-colors">返回列表</NuxtLink>
       </div>
     </aside>
 
     <!-- Main Content: Tabs -->
-    <main class="flex-1 flex flex-col bg-slate-900/80 rounded-3xl shadow-lg min-h-[calc(100vh-8rem)]">
+    <main class="flex-1 flex flex-col card-soft rounded-3xl shadow-lg min-h-[calc(100vh-8rem)]">
       <!-- Tabs Header -->
-      <div class="flex items-center gap-1 p-2 border-b border-slate-800 overflow-x-auto sticky top-24 bg-slate-900/95 backdrop-blur z-10 rounded-t-3xl">
+      <div class="flex items-center gap-1 p-2 border-b border-charcoal-100 overflow-x-auto sticky top-24 bg-white/95 backdrop-blur z-10 rounded-t-3xl">
         <button
           v-for="tab in tabs"
           :key="tab.id"
           @click="activeTab = tab.id"
           class="px-4 py-2 rounded-lg text-sm font-medium transition-colors whitespace-nowrap"
-          :class="activeTab === tab.id ? 'bg-slate-800 text-white' : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'"
+          :class="activeTab === tab.id ? 'bg-bg-cream-200 text-charcoal-900 font-bold' : 'text-charcoal-500 hover:text-charcoal-700 hover:bg-bg-cream-100'"
         >
           {{ tab.label }}
         </button>
@@ -77,29 +77,29 @@
 
       <!-- Tabs Content -->
       <div class="p-6">
-        <p v-if="loading" class="text-sm text-slate-400">加载中...</p>
+        <p v-if="loading" class="text-sm text-charcoal-400">加载中...</p>
         <div v-else>
             
           <!-- Tab: Character -->
           <div v-show="activeTab === 'character'" class="space-y-6 max-w-3xl mx-auto">
             <div class="space-y-4">
-                <h3 class="text-lg font-medium text-white border-l-4 border-primary pl-3">角色设定</h3>
+                <h3 class="text-lg font-medium text-charcoal-900 border-l-4 border-accent-yellow pl-3">角色设定</h3>
                 <div>
-                    <label class="text-sm text-slate-400 block mb-2">Persona / 详细设定</label>
-                    <textarea v-model="builder.persona" class="w-full h-64 rounded-xl border border-slate-700 bg-slate-900 px-4 py-3 text-sm text-white focus:border-primary focus:outline-none leading-relaxed" placeholder="在此输入角色的详细设定、性格描述、背景故事等..." />
+                    <label class="text-sm text-charcoal-500 block mb-2">Persona / 详细设定</label>
+                    <textarea v-model="builder.persona" class="glass-input h-64 text-sm leading-relaxed" placeholder="在此输入角色的详细设定、性格描述、背景故事等..." />
                 </div>
                 <div>
-                    <label class="text-sm text-slate-400 block mb-2">First Message / 开场白</label>
-                    <textarea v-model="builder.first_message" class="w-full h-32 rounded-xl border border-slate-700 bg-slate-900 px-4 py-3 text-sm text-white focus:border-primary focus:outline-none leading-relaxed" placeholder="角色对用户说的第一句话..." />
+                    <label class="text-sm text-charcoal-500 block mb-2">First Message / 开场白</label>
+                    <textarea v-model="builder.first_message" class="glass-input h-32 text-sm leading-relaxed" placeholder="角色对用户说的第一句话..." />
                 </div>
                 <div class="grid gap-6 md:grid-cols-2">
                     <div>
-                        <label class="text-sm text-slate-400 block mb-2">性格特质</label>
-                        <input v-model="builder.traits" class="w-full rounded-xl border border-slate-700 bg-slate-900 px-4 py-2.5 text-sm text-white focus:border-primary focus:outline-none" placeholder="傲娇, 腹黑, 治愈" />
+                        <label class="text-sm text-charcoal-500 block mb-2">性格特质</label>
+                        <input v-model="builder.traits" class="glass-input text-sm" placeholder="傲娇, 腹黑, 治愈" />
                     </div>
                     <div>
-                        <label class="text-sm text-slate-400 block mb-2">当前场景</label>
-                        <input v-model="builder.scenario" class="w-full rounded-xl border border-slate-700 bg-slate-900 px-4 py-2.5 text-sm text-white focus:border-primary focus:outline-none" placeholder="如：暴雨中的咖啡馆" />
+                        <label class="text-sm text-charcoal-500 block mb-2">当前场景</label>
+                        <input v-model="builder.scenario" class="glass-input text-sm" placeholder="如：暴雨中的咖啡馆" />
                     </div>
                 </div>
             </div>
@@ -108,39 +108,39 @@
           <!-- Tab: World -->
           <div v-show="activeTab === 'world'" class="space-y-6 max-w-3xl mx-auto">
              <div class="flex items-center justify-between">
-                <h3 class="text-lg font-medium text-white border-l-4 border-primary pl-3">世界书 (Worldbook)</h3>
-                <button class="text-xs px-3 py-1.5 rounded-lg bg-indigo-500/20 text-indigo-300 hover:bg-indigo-500/30 transition-colors" @click="addWorldEntry">+ 添加条目</button>
+                <h3 class="text-lg font-medium text-charcoal-900 border-l-4 border-accent-yellow pl-3">世界书 (Worldbook)</h3>
+                <button class="text-xs px-3 py-1.5 rounded-lg bg-accent-pink/10 text-accent-pink hover:bg-accent-pink/20 transition-colors" @click="addWorldEntry">+ 添加条目</button>
              </div>
              
              <div class="grid gap-6 md:grid-cols-2">
                 <div>
-                    <label class="text-sm text-slate-400 block mb-2">世界观摘要</label>
-                    <textarea v-model="builder.world.summary" class="w-full h-24 rounded-xl border border-slate-700 bg-slate-900 px-4 py-3 text-sm text-white focus:border-primary focus:outline-none resize-none" />
+                    <label class="text-sm text-charcoal-500 block mb-2">世界观摘要</label>
+                    <textarea v-model="builder.world.summary" class="glass-input h-24 text-sm resize-none" />
                 </div>
                 <div class="space-y-4">
                     <div>
-                        <label class="text-sm text-slate-400 block mb-2">场景 / 地点</label>
-                        <input v-model="builder.world.scene" class="w-full rounded-xl border border-slate-700 bg-slate-900 px-4 py-2.5 text-sm text-white focus:border-primary focus:outline-none" />
+                        <label class="text-sm text-charcoal-500 block mb-2">场景 / 地点</label>
+                        <input v-model="builder.world.scene" class="glass-input text-sm" />
                     </div>
                     <div>
-                        <label class="text-sm text-slate-400 block mb-2">时间线</label>
-                        <input v-model="builder.world.timeline" class="w-full rounded-xl border border-slate-700 bg-slate-900 px-4 py-2.5 text-sm text-white focus:border-primary focus:outline-none" />
+                        <label class="text-sm text-charcoal-500 block mb-2">时间线</label>
+                        <input v-model="builder.world.timeline" class="glass-input text-sm" />
                     </div>
                 </div>
              </div>
              
              <div>
-                <label class="text-sm text-slate-400 block mb-2">关键 NPC</label>
-                <input v-model="builder.world.npcs" class="w-full rounded-xl border border-slate-700 bg-slate-900 px-4 py-2.5 text-sm text-white focus:border-primary focus:outline-none" placeholder="逗号分隔，如：店长, 神秘人" />
+                <label class="text-sm text-charcoal-500 block mb-2">关键 NPC</label>
+                <input v-model="builder.world.npcs" class="glass-input text-sm" placeholder="逗号分隔，如：店长, 神秘人" />
              </div>
 
              <div class="space-y-3">
-                <label class="text-sm text-slate-400 block">自定义条目</label>
-                <div v-if="builder.world.entries.length === 0" class="text-sm text-slate-500 italic py-4 text-center bg-slate-900/50 rounded-xl">暂无条目</div>
-                <div v-for="(entry, idx) in builder.world.entries" :key="idx" class="flex gap-3 items-start bg-slate-900/50 p-3 rounded-xl border border-slate-800">
-                  <input v-model="entry.key" class="w-32 rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-white focus:border-primary focus:outline-none" placeholder="关键词" />
-                  <textarea v-model="entry.value" class="flex-1 h-10 min-h-[2.5rem] rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-white focus:border-primary focus:outline-none resize-y" placeholder="详细设定内容" />
-                  <button class="text-slate-500 hover:text-rose-400 p-2 transition-colors" @click="builder.world.entries.splice(idx, 1)">
+                <label class="text-sm text-charcoal-500 block">自定义条目</label>
+                <div v-if="builder.world.entries.length === 0" class="text-sm text-charcoal-400 italic py-4 text-center bg-bg-cream-100 rounded-xl">暂无条目</div>
+                <div v-for="(entry, idx) in builder.world.entries" :key="idx" class="flex gap-3 items-start bg-bg-cream-100 p-3 rounded-xl border border-charcoal-100">
+                  <input v-model="entry.key" class="w-32 rounded-lg border border-charcoal-200 bg-white px-3 py-2 text-sm text-charcoal-900 focus:border-accent-yellow focus:outline-none" placeholder="关键词" />
+                  <textarea v-model="entry.value" class="flex-1 h-10 min-h-[2.5rem] rounded-lg border border-charcoal-200 bg-white px-3 py-2 text-sm text-charcoal-900 focus:border-accent-yellow focus:outline-none resize-y" placeholder="详细设定内容" />
+                  <button class="text-charcoal-400 hover:text-status-error p-2 transition-colors" @click="builder.world.entries.splice(idx, 1)">
                     <span class="text-lg">×</span>
                   </button>
                 </div>
@@ -150,24 +150,24 @@
           <!-- Tab: Examples -->
           <div v-show="activeTab === 'examples'" class="space-y-6 max-w-3xl mx-auto">
             <div class="flex items-center justify-between">
-                <h3 class="text-lg font-medium text-white border-l-4 border-primary pl-3">对话示例</h3>
-                <button class="text-xs px-3 py-1.5 rounded-lg bg-indigo-500/20 text-indigo-300 hover:bg-indigo-500/30 transition-colors" @click="addExample">+ 添加示例</button>
+                <h3 class="text-lg font-medium text-charcoal-900 border-l-4 border-accent-yellow pl-3">对话示例</h3>
+                <button class="text-xs px-3 py-1.5 rounded-lg bg-accent-pink/10 text-accent-pink hover:bg-accent-pink/20 transition-colors" @click="addExample">+ 添加示例</button>
             </div>
             
-            <div v-if="builder.examples.length === 0" class="text-sm text-slate-500 italic py-8 text-center bg-slate-900/50 rounded-xl">
+            <div v-if="builder.examples.length === 0" class="text-sm text-charcoal-400 italic py-8 text-center bg-bg-cream-100 rounded-xl">
                 暂无示例对话，添加示例有助于模型更好地模仿语气。
             </div>
             
             <div class="space-y-4">
-                <div v-for="(ex, idx) in builder.examples" :key="idx" class="bg-slate-900/50 p-4 rounded-xl border border-slate-800 space-y-3 relative group">
-                    <button class="absolute top-2 right-2 text-slate-600 hover:text-rose-400 opacity-0 group-hover:opacity-100 transition-opacity" @click="builder.examples.splice(idx, 1)">删除</button>
+                <div v-for="(ex, idx) in builder.examples" :key="idx" class="bg-bg-cream-100 p-4 rounded-xl border border-charcoal-100 space-y-3 relative group">
+                    <button class="absolute top-2 right-2 text-charcoal-400 hover:text-status-error opacity-0 group-hover:opacity-100 transition-opacity" @click="builder.examples.splice(idx, 1)">删除</button>
                     <div>
-                        <label class="text-xs text-slate-500 mb-1 block">用户 (User)</label>
-                        <input v-model="ex.user" class="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-white focus:border-primary focus:outline-none" placeholder="用户说的话..." />
+                        <label class="text-xs text-charcoal-500 mb-1 block">用户 (User)</label>
+                        <input v-model="ex.user" class="glass-input text-sm" placeholder="用户说的话..." />
                     </div>
                     <div>
-                        <label class="text-xs text-indigo-400/70 mb-1 block">角色 (Assistant)</label>
-                        <input v-model="ex.assistant" class="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-white focus:border-primary focus:outline-none" placeholder="角色的回复..." />
+                        <label class="text-xs text-accent-pink mb-1 block">角色 (Assistant)</label>
+                        <input v-model="ex.assistant" class="glass-input text-sm" placeholder="角色的回复..." />
                     </div>
                 </div>
             </div>
@@ -176,50 +176,40 @@
           <!-- Tab: Preset -->
           <div v-show="activeTab === 'preset'" class="space-y-6 max-w-3xl mx-auto">
             <div class="flex items-center justify-between">
-                <h3 class="text-lg font-medium text-white border-l-4 border-primary pl-3">Prompt 编排</h3>
-                <button class="text-xs px-3 py-1.5 rounded-lg bg-indigo-500/20 text-indigo-300 hover:bg-indigo-500/30 transition-colors" @click="addBlock">+ 添加 Block</button>
+                <h3 class="text-lg font-medium text-charcoal-900 border-l-4 border-accent-yellow pl-3">Prompt 编排</h3>
+                <button class="text-xs px-3 py-1.5 rounded-lg bg-accent-pink/10 text-accent-pink hover:bg-accent-pink/20 transition-colors" @click="addBlock">+ 添加 Block</button>
             </div>
             
             <div class="space-y-3">
               <div
                 v-for="(block, idx) in builder.preset.blocks"
                 :key="idx"
-                class="bg-slate-900/50 p-4 rounded-xl border border-slate-800 hover:border-slate-700 transition-colors"
+                class="bg-bg-cream-100 p-4 rounded-xl border border-charcoal-100 hover:border-accent-yellow transition-colors"
               >
                 <div class="flex items-center justify-between gap-4 mb-3">
                   <div class="flex flex-col gap-1 flex-1">
-                    <input v-model="block.name" class="bg-transparent text-sm font-medium text-white border-b border-transparent focus:border-indigo-500 outline-none transition-colors w-full" placeholder="Block Name" />
-                    <div class="flex items-center gap-3">
-                        <div class="flex items-center gap-1 text-xs text-slate-500">
-                            <span>ID:</span>
-                            <input v-model="block.id" class="bg-transparent border-b border-transparent focus:border-indigo-500 outline-none w-24 transition-colors" placeholder="ID" />
-                        </div>
-                        <label class="flex items-center gap-1.5 text-xs text-slate-400 cursor-pointer hover:text-slate-300 transition-colors">
-                            <input type="checkbox" v-model="block.marker" class="rounded bg-slate-800 border-slate-600 text-indigo-500 focus:ring-indigo-500/50" />
-                            Marker
-                        </label>
-                    </div>
+                    <input v-model="block.name" class="bg-transparent text-sm font-medium text-charcoal-900 border-b border-transparent focus:border-accent-yellow outline-none transition-colors w-full" placeholder="Block Name" />
                   </div>
                   <div class="flex items-center gap-2">
-                    <div class="flex bg-slate-800 rounded-lg p-0.5">
-                        <button class="text-xs px-2 py-1 text-slate-400 hover:text-white hover:bg-slate-700 rounded transition-colors" @click="moveBlock(idx, 'up')">↑</button>
-                        <button class="text-xs px-2 py-1 text-slate-400 hover:text-white hover:bg-slate-700 rounded transition-colors" @click="moveBlock(idx, 'down')">↓</button>
+                    <div class="flex bg-white border border-charcoal-200 rounded-lg p-0.5">
+                        <button class="text-xs px-2 py-1 text-charcoal-400 hover:text-charcoal-900 hover:bg-charcoal-50 rounded transition-colors" @click="moveBlock(idx, 'up')">↑</button>
+                        <button class="text-xs px-2 py-1 text-charcoal-400 hover:text-charcoal-900 hover:bg-charcoal-50 rounded transition-colors" @click="moveBlock(idx, 'down')">↓</button>
                     </div>
-                    <label class="flex items-center gap-2 text-xs text-slate-400 cursor-pointer select-none">
+                    <label class="flex items-center gap-2 text-xs text-charcoal-400 cursor-pointer select-none">
                         <div class="relative inline-flex items-center cursor-pointer">
                             <input type="checkbox" v-model="block.enabled" class="sr-only peer">
-                            <div class="w-9 h-5 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-indigo-600"></div>
+                            <div class="w-9 h-5 bg-charcoal-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-accent-yellow"></div>
                         </div>
                         <span class="w-6">{{ block.enabled ? '启用' : '禁用' }}</span>
                     </label>
-                    <button class="text-slate-500 hover:text-rose-400 p-1.5 rounded-lg hover:bg-rose-500/10 transition-colors ml-1" @click="removeBlock(idx)">
+                    <button class="text-charcoal-400 hover:text-status-error p-1.5 rounded-lg hover:bg-red-50 transition-colors ml-1" @click="removeBlock(idx)">
                         <span class="text-lg leading-none">×</span>
                     </button>
                   </div>
                 </div>
                 <textarea
                   v-model="block.content"
-                  class="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-white focus:border-primary focus:outline-none transition-colors"
+                  class="w-full rounded-lg border border-charcoal-200 bg-white px-3 py-2 text-sm text-charcoal-900 focus:border-accent-yellow focus:outline-none transition-colors"
                   rows="3"
                   :placeholder="block.marker ? '此 Block 为 Marker 占位符，运行时将被替换为动态内容' : '在此输入静态 Prompt 内容...'"
                 />
@@ -229,38 +219,38 @@
 
           <!-- Tab: Preview -->
           <div v-show="activeTab === 'preview'" class="space-y-6 max-w-3xl mx-auto">
-             <h3 class="text-lg font-medium text-white border-l-4 border-primary pl-3">预览与导出</h3>
+             <h3 class="text-lg font-medium text-charcoal-900 border-l-4 border-accent-yellow pl-3">预览与导出</h3>
              
              <div class="grid gap-4 md:grid-cols-2">
                 <div class="space-y-2">
-                    <label class="text-sm text-slate-400">备份 Prompt (Role Versions)</label>
+                    <label class="text-sm text-charcoal-500">备份 Prompt (Role Versions)</label>
                     <textarea
                         v-model="form.prompt"
-                        class="w-full h-40 rounded-xl border border-slate-700 bg-slate-900 px-4 py-3 text-sm text-white focus:border-primary focus:outline-none resize-none"
+                        class="glass-input h-40 text-sm resize-none"
                         placeholder="如需将当前草稿快照到后端 role_versions，可在此粘贴/生成"
                     />
-                    <p class="text-xs text-slate-500">保存后可通过 /roles/:id/prompt 访问</p>
+                    <p class="text-xs text-charcoal-400">保存后可通过 /roles/:id/prompt 访问</p>
                 </div>
                 <div class="space-y-2">
-                    <label class="text-sm text-slate-400">导出选项</label>
+                    <label class="text-sm text-charcoal-500">导出选项</label>
                     <div class="flex flex-col gap-2">
-                        <button class="w-full py-2 rounded-xl border border-slate-600 bg-slate-800 text-sm text-white hover:bg-slate-700 transition-colors" @click="copy(nebulaJSON, '已复制 Nebula JSON')">
+                        <button class="w-full py-2 rounded-xl border border-charcoal-200 bg-white text-sm text-charcoal-700 hover:bg-bg-cream-100 transition-colors" @click="copy(nebulaJSON, '已复制 Nebula JSON')">
                             复制 Nebula JSON
                         </button>
-                        <button class="w-full py-2 rounded-xl border border-slate-600 bg-slate-800 text-sm text-white hover:bg-slate-700 transition-colors" @click="copy(stJSON, '已复制 ST 友好 JSON')">
+                        <button class="w-full py-2 rounded-xl border border-charcoal-200 bg-white text-sm text-charcoal-700 hover:bg-bg-cream-100 transition-colors" @click="copy(stJSON, '已复制 ST 友好 JSON')">
                             复制 SillyTavern JSON
                         </button>
-                        <button class="w-full py-2 rounded-xl border border-slate-600 bg-slate-800 text-sm text-white hover:bg-slate-700 transition-colors" @click="copy(presetJSON, '已复制 Preset JSON')">
+                        <button class="w-full py-2 rounded-xl border border-charcoal-200 bg-white text-sm text-charcoal-700 hover:bg-bg-cream-100 transition-colors" @click="copy(presetJSON, '已复制 Preset JSON')">
                             复制 Preset JSON
                         </button>
                     </div>
-                    <p v-if="copyMessage" class="text-xs text-emerald-400 text-center mt-2">{{ copyMessage }}</p>
+                    <p v-if="copyMessage" class="text-xs text-status-success text-center mt-2">{{ copyMessage }}</p>
                 </div>
              </div>
 
              <div class="space-y-2">
-                <label class="text-sm text-slate-400">Prompt 预览 (System)</label>
-                <div class="w-full h-64 rounded-xl border border-slate-700 bg-slate-900 px-4 py-3 text-xs text-slate-300 overflow-y-auto whitespace-pre-wrap font-mono custom-scrollbar">
+                <label class="text-sm text-charcoal-500">Prompt 预览 (System)</label>
+                <div class="w-full h-64 rounded-xl border border-charcoal-200 bg-white px-4 py-3 text-xs text-charcoal-600 overflow-y-auto whitespace-pre-wrap font-mono custom-scrollbar">
                     {{ promptPreview }}
                 </div>
              </div>
@@ -631,10 +621,10 @@ onMounted(load)
   background: transparent;
 }
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: #334155;
+  background: #cbd5e1;
   border-radius: 3px;
 }
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: #475569;
+  background: #94a3b8;
 }
 </style>

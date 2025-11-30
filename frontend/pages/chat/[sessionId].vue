@@ -1,43 +1,43 @@
 <template>
   <div class="flex h-full">
     <!-- Sidebar -->
-    <aside class="w-80 bg-[#101018] border-r border-white/5 flex flex-col">
-      <div class="h-16 px-4 border-b border-white/5 flex items-center justify-between">
+    <aside class="w-80 bg-white border-r border-charcoal-100 flex flex-col shadow-xl shadow-charcoal-900/5 z-20">
+      <div class="h-16 px-4 border-b border-charcoal-100 flex items-center justify-between bg-white/50 backdrop-blur">
         <div class="flex items-center gap-3">
-          <div class="w-8 h-8 rounded-full bg-pink-600 text-white text-sm font-semibold flex items-center justify-center shadow-lg shadow-pink-900/40">
+          <div class="w-8 h-8 rounded-lg bg-accent-yellow text-charcoal-900 text-sm font-bold flex items-center justify-center shadow-sm">
             对话
           </div>
           <div class="flex items-center gap-2 text-xs">
             <button
               class="px-3 py-1 rounded-md border border-white/10 transition-colors"
-              :class="activeList === 'sessions' ? 'bg-pink-600 text-white shadow-pink-900/30 shadow' : 'text-gray-300 hover:text-white'"
+              :class="activeList === 'sessions' ? 'bg-charcoal-900 text-white shadow-lg shadow-charcoal-900/20' : 'text-charcoal-500 hover:text-charcoal-900 hover:bg-charcoal-100'"
               @click="activeList = 'sessions'"
             >
               会话
             </button>
             <button
               class="px-3 py-1 rounded-md border border-white/10 transition-colors"
-              :class="activeList === 'favorites' ? 'bg-pink-600 text-white shadow-pink-900/30 shadow' : 'text-gray-300 hover:text-white'"
+              :class="activeList === 'favorites' ? 'bg-charcoal-900 text-white shadow-lg shadow-charcoal-900/20' : 'text-charcoal-500 hover:text-charcoal-900 hover:bg-charcoal-100'"
               @click="activeList = 'favorites'"
             >
               收藏角色
             </button>
           </div>
         </div>
-        <NuxtLink to="/search" class="text-xs text-pink-200 hover:text-white transition-colors">探索</NuxtLink>
+        <NuxtLink to="/search" class="text-xs text-charcoal-500 hover:text-accent-yellow font-medium transition-colors">探索</NuxtLink>
       </div>
 
       <div class="px-4 py-3">
         <div class="relative">
-          <div class="i-ph-magnifying-glass text-gray-500 absolute left-3 top-2.5"></div>
+          <div class="i-ph-magnifying-glass text-charcoal-400 absolute left-3 top-2.5"></div>
           <input
             v-model="search"
             :placeholder="activeList === 'sessions' ? '搜索会话' : '搜索收藏角色'"
-            class="w-full bg-white/5 border border-white/10 rounded-xl pl-9 pr-3 py-2 text-sm text-gray-200 placeholder:text-gray-500 focus:outline-none focus:border-pink-500 focus:ring-1 focus:ring-pink-500"
+            class="glass-input pl-9 py-2 text-sm rounded-xl"
           />
         </div>
       </div>
-      <div v-if="presetError" class="px-6 py-1 text-[12px] text-rose-400 bg-rose-500/10 border-t border-b border-rose-500/20">
+      <div v-if="presetError" class="px-6 py-1 text-[12px] text-status-error bg-status-error/10 border-t border-b border-status-error/20">
         {{ presetError }}
       </div>
 
@@ -48,14 +48,14 @@
         <div v-else-if="favoritesLoading && activeList === 'favorites'" class="flex justify-center py-10 text-gray-500">
           <div class="i-svg-spinners-90-ring-with-bg text-xl text-pink-400" />
         </div>
-        <div v-else-if="activeList === 'sessions' && filteredSessions.length === 0" class="px-4 py-6 text-sm text-gray-500 space-y-2">
+        <div v-else-if="activeList === 'sessions' && filteredSessions.length === 0" class="px-4 py-6 text-sm text-charcoal-500 space-y-2">
           <p>还没有对话记录。</p>
           <NuxtLink to="/search" class="text-pink-300 hover:text-white text-xs inline-flex items-center gap-1">
             <span>去找角色开始聊天</span>
             <div class="i-ph-arrow-right" />
           </NuxtLink>
         </div>
-        <div v-else-if="activeList === 'favorites' && filteredFavorites.length === 0" class="px-4 py-6 text-sm text-gray-500 space-y-2">
+        <div v-else-if="activeList === 'favorites' && filteredFavorites.length === 0" class="px-4 py-6 text-sm text-charcoal-500 space-y-2">
           <p>还没有收藏的角色。</p>
           <NuxtLink to="/search" class="text-pink-300 hover:text-white text-xs inline-flex items-center gap-1">
             <span>去探索并收藏吧</span>
@@ -68,17 +68,17 @@
             :key="session.id"
             :to="`/chat/${session.id}`"
             class="block rounded-xl px-3 py-2 border transition-all duration-150"
-            :class="session.id === activeSessionId
-              ? 'bg-pink-500/10 border-pink-500/30 shadow-inner shadow-pink-900/30'
-              : 'border-transparent hover:bg-white/5 hover:border-white/10'"
+              :class="session.id === activeSessionId
+                ? 'bg-bg-cream-200 border-accent-yellow/50 shadow-sm'
+                : 'border-transparent hover:bg-charcoal-50 hover:border-charcoal-100'"
           >
             <div class="flex items-center justify-between gap-2">
-              <p class="text-sm font-medium text-white truncate">{{ session.title }}</p>
-              <span class="text-[10px] text-gray-500 whitespace-nowrap">
+              <p class="text-sm font-bold text-charcoal-900 truncate">{{ session.title }}</p>
+              <span class="text-[10px] text-charcoal-400 whitespace-nowrap">
                 {{ new Date(session.updated_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) }}
               </span>
             </div>
-            <p class="text-xs text-gray-500 truncate mt-1" :title="session.last_message || '暂无消息'">
+            <p class="text-xs text-charcoal-500 truncate mt-1" :title="session.last_message || '暂无消息'">
               {{ session.last_message || '暂无消息' }}
             </p>
           </NuxtLink>
@@ -88,18 +88,18 @@
           <div
             v-for="role in filteredFavorites"
             :key="role.id"
-            class="flex items-center gap-3 p-3 rounded-xl border border-white/10 hover:border-pink-500/50 hover:bg-white/5 transition-colors"
+            class="flex items-center gap-3 p-3 rounded-xl border border-charcoal-100 hover:border-accent-yellow hover:bg-bg-cream-100 transition-colors bg-white"
           >
-            <div class="w-10 h-10 rounded-full bg-white/10 overflow-hidden flex items-center justify-center">
+            <div class="w-10 h-10 rounded-full bg-bg-cream-200 overflow-hidden flex items-center justify-center border border-white shadow-sm">
               <img v-if="role.avatar_url" :src="resolveRoleAvatar(role.avatar_url)" class="w-full h-full object-cover" />
-              <span v-else class="text-sm text-gray-300">{{ role.name?.charAt(0) }}</span>
+              <span v-else class="text-sm text-charcoal-500 font-bold">{{ role.name?.charAt(0) }}</span>
             </div>
             <div class="flex-1 min-w-0">
-              <p class="text-sm text-white truncate">{{ role.name }}</p>
-              <p class="text-xs text-gray-500 truncate">{{ role.description }}</p>
+              <p class="text-sm font-bold text-charcoal-900 truncate">{{ role.name }}</p>
+              <p class="text-xs text-charcoal-500 truncate">{{ role.description }}</p>
             </div>
             <button
-              class="px-3 py-1 rounded-lg bg-pink-600 text-white text-xs hover:bg-pink-500 disabled:opacity-50"
+              class="px-3 py-1 rounded-lg bg-charcoal-900 text-white text-xs hover:bg-charcoal-700 disabled:opacity-50 transition-colors"
               :disabled="isLoading"
               @click="startChatWithRole(role.id)"
             >
@@ -109,10 +109,10 @@
         </div>
       </div>
 
-      <div class="p-4 border-t border-white/5">
+      <div class="p-4 border-t border-charcoal-100 bg-white/50 backdrop-blur">
         <NuxtLink
           to="/search"
-          class="w-full inline-flex justify-center rounded-lg bg-pink-600/90 hover:bg-pink-500 text-white text-sm py-2 transition-colors"
+          class="w-full inline-flex justify-center rounded-lg btn-primary text-sm py-2 shadow-lg shadow-charcoal-900/10"
         >
           新建对话
         </NuxtLink>
@@ -120,13 +120,15 @@
     </aside>
 
     <!-- Conversation Pane -->
-    <section class="flex-1 flex flex-col bg-gradient-to-b from-[#0b0b12] to-[#0e0e18]">
-      <div class="h-16 flex items-center justify-between border-b border-white/5 px-6 bg-black/40 backdrop-blur">
+    <section class="flex-1 flex flex-col bg-bg-cream-50 relative">
+      <!-- Background Pattern -->
+      <div class="absolute inset-0 pointer-events-none opacity-40" style="background-image: radial-gradient(#cbd5e1 1px, transparent 1px); background-size: 24px 24px;"></div>
+      <div class="h-16 flex items-center justify-between border-b border-charcoal-100 px-6 bg-white/80 backdrop-blur z-10">
         <div class="flex items-center gap-3">
-          <button class="p-2 rounded-lg hover:bg-white/5 text-gray-400 hover:text-white transition-colors" @click="router.push('/search')">
+          <button class="p-2 rounded-lg hover:bg-charcoal-100 text-charcoal-400 hover:text-charcoal-900 transition-colors" @click="router.push('/search')">
             <div class="i-ph-caret-left text-lg" />
           </button>
-          <div class="w-11 h-11 rounded-2xl bg-white/5 overflow-hidden flex items-center justify-center text-gray-200 text-sm">
+          <div class="w-11 h-11 rounded-2xl bg-bg-cream-200 overflow-hidden flex items-center justify-center text-charcoal-900 text-sm font-bold border border-white shadow-sm">
             <img
               v-if="sessionView?.role?.avatar_url"
               :src="resolveRoleAvatar(sessionView.role.avatar_url)"
@@ -135,8 +137,8 @@
             <span v-else>{{ sessionView?.role?.name?.charAt(0) || 'AI' }}</span>
           </div>
           <div>
-            <div class="text-sm font-semibold text-white leading-tight">{{ sessionView?.role?.name || 'AI 会话' }}</div>
-            <div class="text-xs text-gray-500">{{ sessionView?.session?.title || '选择左侧会话开始聊天' }}</div>
+            <div class="text-sm font-bold text-charcoal-900 leading-tight">{{ sessionView?.role?.name || 'AI 会话' }}</div>
+            <div class="text-xs text-charcoal-500">{{ sessionView?.session?.title || '选择左侧会话开始聊天' }}</div>
           </div>
         </div>
 
@@ -161,10 +163,10 @@
           >
             历史记录
           </button>
-          <div class="flex items-center gap-2 bg-white/5 border border-white/10 rounded-lg px-2 py-1 text-xs">
+          <div class="flex items-center gap-2 bg-white border border-charcoal-200 rounded-lg px-2 py-1 text-xs shadow-sm">
             <select
               v-model="selectedPresetId"
-              class="bg-transparent text-gray-100 focus:outline-none"
+              class="bg-transparent text-charcoal-900 focus:outline-none"
               :disabled="isLoading"
             >
               <option value="">未使用预设</option>
@@ -172,20 +174,20 @@
                 {{ p.name || '未命名预设' }}
               </option>
             </select>
-            <button class="px-2 py-1 rounded-md bg-white/10 hover:bg-white/20" @click="openPresetDetails" :disabled="!selectedPreset">
+            <button class="px-2 py-1 rounded-md bg-charcoal-100 hover:bg-charcoal-200 text-charcoal-700" @click="openPresetDetails" :disabled="!selectedPreset">
               查看
             </button>
-            <button class="px-2 py-1 rounded-md bg-white/10 hover:bg-white/20 text-rose-300" @click="deleteSelectedPreset" :disabled="!selectedPresetId">
+            <button class="px-2 py-1 rounded-md bg-charcoal-100 hover:bg-charcoal-200 text-status-error" @click="deleteSelectedPreset" :disabled="!selectedPresetId">
               删除
             </button>
-            <button class="px-2 py-1 rounded-md bg-white/10 hover:bg-white/20" @click="triggerPresetImport">
+            <button class="px-2 py-1 rounded-md bg-charcoal-100 hover:bg-charcoal-200 text-charcoal-700" @click="triggerPresetImport">
               导入
             </button>
           </div>
-          <div class="flex items-center gap-1 bg-white/5 border border-white/10 rounded-lg p-1 text-xs">
+          <div class="flex items-center gap-1 bg-white border border-charcoal-200 rounded-lg p-1 text-xs shadow-sm">
             <button
               class="px-3 py-1 rounded-md transition-colors"
-              :class="isSFW ? 'bg-pink-600 text-white shadow-pink-900/30 shadow' : 'text-gray-300 hover:text-white'"
+              :class="isSFW ? 'bg-charcoal-900 text-white shadow-md shadow-charcoal-900/20' : 'text-charcoal-400 hover:text-charcoal-900'"
               :disabled="isUpdatingSettings || togglingMode || !sessionView"
               @click="handleToggleMode('sfw')"
             >
@@ -193,19 +195,19 @@
             </button>
             <button
               class="px-3 py-1 rounded-md transition-colors"
-              :class="!isSFW ? 'bg-white/10 text-white' : 'text-gray-400 hover:text-white'"
+              :class="!isSFW ? 'bg-charcoal-900 text-white shadow-md shadow-charcoal-900/20' : 'text-charcoal-400 hover:text-charcoal-900'"
               :disabled="isUpdatingSettings || togglingMode || !sessionView"
               @click="handleToggleMode('nsfw')"
             >
               NSFW
             </button>
           </div>
-          <div class="bg-white/5 rounded-lg px-3 py-1.5 flex items-center gap-2 border border-white/10">
-            <div class="text-[11px] text-gray-400">模型</div>
+          <div class="bg-white rounded-lg px-3 py-1.5 flex items-center gap-2 border border-charcoal-200 shadow-sm">
+            <div class="text-[11px] text-charcoal-400">模型</div>
             <select
               v-model="selectedModel"
               @change="handleSelectModel(($event.target as HTMLSelectElement).value)"
-              class="bg-transparent text-sm text-gray-100 focus:outline-none"
+              class="bg-transparent text-sm text-charcoal-900 focus:outline-none"
               :disabled="modelChanging || isUpdatingSettings || !sessionView"
             >
               <option value="">默认</option>
@@ -213,22 +215,22 @@
                 {{ model.name }}（{{ formatModelPrice(model) }}）
               </option>
             </select>
-            <div v-if="modelChanging" class="i-svg-spinners-3-dots-fade text-gray-400" />
+            <div v-if="modelChanging" class="i-svg-spinners-3-dots-fade text-accent-yellow" />
           </div>
-          <label class="flex items-center gap-2 text-xs text-gray-300 cursor-pointer">
-            <input type="checkbox" v-model="enableStream" class="rounded bg-slate-900 border-slate-700 text-pink-500 focus:ring-pink-500" />
+          <label class="flex items-center gap-2 text-xs text-charcoal-500 cursor-pointer hover:text-charcoal-900 transition-colors">
+            <input type="checkbox" v-model="enableStream" class="rounded bg-white border-charcoal-300 text-charcoal-900 focus:ring-accent-yellow" />
             流式传输
           </label>
         </div>
       </div>
 
-      <div ref="messagesContainer" class="flex-1 overflow-y-auto px-6 py-6 space-y-4 custom-scroll">
-        <div v-if="loadingError" class="text-center text-sm text-rose-400 py-10">{{ loadingError }}</div>
+      <div ref="messagesContainer" class="flex-1 overflow-y-auto px-6 py-6 space-y-6 custom-scroll z-0">
+        <div v-if="loadingError" class="text-center text-sm text-status-error py-10">{{ loadingError }}</div>
         <div v-else-if="isLoading && displayMessages.length === 0" class="flex justify-center py-10">
-          <div class="i-svg-spinners-90-ring-with-bg text-2xl text-pink-400" />
+          <div class="w-8 h-8 border-2 border-accent-yellow/30 border-t-accent-yellow rounded-full animate-spin" />
         </div>
         <template v-else>
-          <div v-if="displayMessages.length === 0" class="w-full py-16 text-center text-gray-500">
+          <div v-if="displayMessages.length === 0" class="w-full py-16 text-center text-charcoal-400">
             <p class="text-sm">还没有消息，先打个招呼吧。</p>
           </div>
           <div
@@ -237,7 +239,7 @@
             class="group flex gap-3 max-w-5xl"
             :class="msg.role === 'user' ? 'flex-row-reverse ml-auto' : ''"
           >
-            <div class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-xs text-gray-300 overflow-hidden">
+            <div class="w-10 h-10 rounded-full bg-white border border-charcoal-100 flex items-center justify-center text-xs text-charcoal-500 overflow-hidden shadow-sm shrink-0">
               <template v-if="msg.role === 'user'">
                 我
               </template>
@@ -257,70 +259,70 @@
               >
                 <textarea
                   v-model="editingContent"
-                  class="w-full rounded-2xl px-4 py-3 text-sm bg-white/10 border border-pink-400 text-white focus:outline-none"
+                  class="w-full rounded-2xl px-4 py-3 text-sm bg-white border border-accent-yellow text-charcoal-900 focus:outline-none"
                   rows="3"
                 />
                 <div class="flex gap-2 text-xs">
-                  <button class="px-3 py-1 rounded-md bg-pink-600 text-white" @click="saveEdit(msg)">保存</button>
-                  <button class="px-3 py-1 rounded-md bg-white/10 text-slate-200" @click="cancelEdit">取消</button>
+                  <button class="px-3 py-1 rounded-md bg-charcoal-900 text-white" @click="saveEdit(msg)">保存</button>
+                  <button class="px-3 py-1 rounded-md bg-charcoal-100 text-charcoal-600 hover:bg-charcoal-200" @click="cancelEdit">取消</button>
                 </div>
               </div>
               <div v-else>
                 <div
                   class="rounded-2xl px-4 py-3 text-sm leading-relaxed shadow-lg transition"
                   :class="msg.role === 'user'
-                    ? 'bg-pink-600 text-white shadow-pink-900/30'
-                    : 'bg-white/5 border border-white/10 text-gray-100'"
+                    ? 'bg-charcoal-900 text-bg-cream-100 shadow-lg shadow-charcoal-900/20'
+                    : 'bg-white border border-charcoal-100 text-charcoal-900 shadow-sm'"
                   :style="retryingMessageId === msg.id ? 'opacity:0.65; filter:blur(0.2px);' : ''"
                 >
                   <div v-html="formatMessageContent(msg.content)"></div>
-                  <div v-if="msg.metadata?.reasoning_text" class="mt-2 text-[11px] text-amber-200">
-                    <button class="underline hover:text-amber-100" @click="reasoningOpen[msg.id] = !reasoningOpen[msg.id]">
+                  <div v-if="msg.metadata?.reasoning_text" class="mt-2 text-[11px] text-charcoal-500 border-t border-charcoal-100/20 pt-2">
+                    <button class="underline hover:text-charcoal-700" @click="reasoningOpen[msg.id] = !reasoningOpen[msg.id]">
                       {{ reasoningOpen[msg.id] ? '收起思维链' : '展开思维链' }}
                     </button>
-                    <div v-if="reasoningOpen[msg.id]" class="mt-1 whitespace-pre-wrap break-words text-amber-100/90">
+                    <div v-if="reasoningOpen[msg.id]" class="mt-1 whitespace-pre-wrap break-words text-charcoal-500/90 bg-black/5 rounded p-2">
                       {{ msg.metadata.reasoning_text }}
                     </div>
                   </div>
-                  <div v-if="retryingMessageId === msg.id" class="mt-2 flex items-center gap-2 text-[11px] text-pink-200">
+                  <div v-if="retryingMessageId === msg.id" class="mt-2 flex items-center gap-2 text-[11px] text-accent-yellow-dark">
                     <div class="i-svg-spinners-3-dots-fade" />
                     重新生成中…
                   </div>
                 </div>
-                <div class="text-[10px] text-gray-500 mt-1">
+                <div class="text-[10px] text-charcoal-400 mt-1 pl-1">
                   {{ new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) }}
                 </div>
-                <div class="mt-1 flex flex-wrap gap-2 text-[11px] text-slate-400 opacity-0 group-hover:opacity-100 transition">
-                  <button v-if="msg.role === 'user' || msg.role === 'assistant'" class="hover:text-white" @click="startEdit(msg)">编辑</button>
-                  <button v-if="msg.role === 'assistant'" class="hover:text-white" @click="retryMessage(msg)">重试</button>
-                  <button class="hover:text-rose-300" @click="deleteMessage(msg)">撤回</button>
+                <div class="mt-1 flex flex-wrap gap-2 text-[11px] text-charcoal-400 opacity-0 group-hover:opacity-100 transition pl-1">
+                  <button v-if="msg.role === 'user' || msg.role === 'assistant'" class="hover:text-charcoal-900" @click="startEdit(msg)">编辑</button>
+                  <button v-if="msg.role === 'assistant'" class="hover:text-charcoal-900" @click="retryMessage(msg)">重试</button>
+                  <button class="hover:text-status-error" @click="deleteMessage(msg)">撤回</button>
                   <button
-                    class="px-2 py-1 rounded-full bg-pink-600 text-white hover:bg-pink-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                    class="px-2 py-1 rounded-full bg-bg-cream-200 text-charcoal-700 hover:bg-accent-yellow hover:text-charcoal-900 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                     :disabled="!isPersistedMessage(msg)"
                     @click="openImageModal(msg)"
                   >生成图片</button>
                 </div>
-                <div v-if="imageJobs[msg.id]" class="mt-2 rounded-xl border border-white/10 bg-white/5 p-3 text-xs text-slate-200 space-y-2">
+                <div v-if="imageJobs[msg.id]" class="mt-2 rounded-xl border border-charcoal-100 bg-white p-3 text-xs text-charcoal-700 space-y-2 shadow-sm">
                   <div class="flex items-center gap-2">
-                    <span class="rounded-full px-2 py-0.5 text-[10px]" :class="imageJobs[msg.id].status === 'succeeded' ? 'bg-emerald-500/20 text-emerald-200' : imageJobs[msg.id].status === 'failed' ? 'bg-rose-500/20 text-rose-200' : 'bg-amber-500/20 text-amber-200'">
+                    <span class="rounded-full px-2 py-0.5 text-[10px]" :class="imageJobs[msg.id].status === 'succeeded' ? 'bg-status-success/10 text-status-success' : imageJobs[msg.id].status === 'failed' ? 'bg-status-error/10 text-status-error' : 'bg-status-warning/10 text-status-warning'">
                       {{ imageJobs[msg.id].status }}
                     </span>
                   </div>
-                  <div v-if="imageJobs[msg.id].error" class="text-rose-300">错误：{{ imageJobs[msg.id].error }}</div>
-                  <div v-if="imageJobs[msg.id].url" class="overflow-hidden rounded-lg border border-white/10">
+                  <div v-if="imageJobs[msg.id].error" class="text-status-error">错误：{{ imageJobs[msg.id].error }}</div>
+                  <div v-if="imageJobs[msg.id].url" class="overflow-hidden rounded-lg border border-charcoal-100">
                     <img :src="imageJobs[msg.id].url" class="max-w-xs md:max-w-sm w-full mx-auto object-contain" />
                   </div>
-                  <div class="flex justify-end gap-2 text-[11px] text-slate-300">
-                    <button class="rounded-full border border-white/20 px-3 py-1 hover:border-white/40 hover:text-white transition" @click="retryImageJob(msg)">重试</button>
-                    <button class="rounded-full border border-white/20 px-3 py-1 hover:border-white/40 hover:text-rose-200 transition" @click="clearImageJob(msg.id)">撤回</button>
+                  <div class="flex justify-end gap-2 text-[11px] text-charcoal-400">
+                    <button class="rounded-full border border-charcoal-200 px-3 py-1 hover:border-charcoal-400 hover:text-charcoal-900 transition" @click="retryImageJob(msg)">重试</button>
+                    <button class="rounded-full border border-charcoal-200 px-3 py-1 hover:border-charcoal-400 hover:text-status-error transition" @click="clearImageJob(msg.id)">撤回</button>
                   </div>
                 </div>
               </div>
             </div>
           </div>
 
-          <div v-if="isSendingMessage" class="flex gap-3 items-center text-gray-400">
-            <div class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center">
+          <div v-if="isSendingMessage" class="flex gap-3 items-center text-charcoal-400">
+            <div class="w-10 h-10 rounded-full bg-white flex items-center justify-center border border-charcoal-100 shadow-sm">
               <div class="i-svg-spinners-3-dots-fade" />
             </div>
             <div class="text-xs">正在思考...</div>
@@ -328,24 +330,24 @@
         </template>
       </div>
 
-      <div class="border-t border-white/5 bg-black/40 backdrop-blur px-6 py-4">
+      <div class="border-t border-charcoal-100 bg-white/80 backdrop-blur px-6 py-4 z-10">
         <div class="max-w-5xl mx-auto flex items-end gap-3">
           <textarea
             v-model="input"
             @keydown.enter.exact.prevent="handleSend"
             placeholder="和她聊点什么吧..."
-            class="flex-1 bg-white/5 border border-white/10 rounded-2xl px-4 py-3 text-sm text-white focus:outline-none focus:border-pink-500 focus:ring-1 focus:ring-pink-500 min-h-[56px] max-h-32 resize-none"
+            class="flex-1 glass-input min-h-[56px] max-h-32 resize-none"
           />
           <button
             @click="handleSend"
             :disabled="!input.trim() || isSendingMessage || !activeSessionId"
-            class="h-12 px-5 rounded-xl bg-pink-600 hover:bg-pink-500 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 text-sm font-medium shadow-lg shadow-pink-900/30"
+            class="h-12 px-5 rounded-xl btn-primary disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 text-sm font-medium shadow-lg shadow-charcoal-900/10"
           >
             <div class="i-ph-paper-plane-tilt" />
             发送
           </button>
         </div>
-        <div class="text-[11px] text-gray-500 text-center mt-2">AI 可能会出错，请谨慎核对关键信息。</div>
+        <div class="text-[11px] text-charcoal-400 text-center mt-2">AI 可能会出错，请谨慎核对关键信息。</div>
       </div>
     </section>
 
@@ -354,35 +356,35 @@
       <div class="modal-card max-w-md w-full">
         <div class="flex items-center justify-between mb-3">
           <div>
-            <h3 class="font-semibold text-white text-lg">用户设定</h3>
-            <p class="text-xs text-slate-400">设置 &#123;&#123;user&#125;&#125; 的名字，用于替换占位符并发送给 AI。</p>
+            <h3 class="font-display font-bold text-charcoal-900 text-lg">用户设定</h3>
+            <p class="text-xs text-charcoal-500">设置 &#123;&#123;user&#125;&#125; 的名字，用于替换占位符并发送给 AI。</p>
           </div>
-          <button class="text-gray-400 hover:text-white" @click="showUserSettings = false">✕</button>
+          <button class="text-charcoal-400 hover:text-charcoal-900 transition-colors" @click="showUserSettings = false">✕</button>
         </div>
         <div class="space-y-3">
           <div>
-            <label class="text-xs text-slate-400 mb-1 block">用户名 / 昵称</label>
+            <label class="text-xs text-charcoal-500 mb-1 block font-medium">用户名 / 昵称</label>
             <input
               v-model.trim="userSettings.name"
-              class="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-pink-500 focus:outline-none"
+              class="glass-input w-full rounded-lg px-3 py-2 text-sm"
               placeholder="如：星极、阿华田"
             />
-            <p class="text-[11px] text-slate-500 mt-1">将覆盖账号昵称；&#123;&#123;user&#125;&#125; 占位符会使用此值。</p>
+            <p class="text-[11px] text-charcoal-400 mt-1">将覆盖账号昵称；&#123;&#123;user&#125;&#125; 占位符会使用此值。</p>
           </div>
           <div>
-            <label class="text-xs text-slate-400 mb-1 block">用户设定 / 备注</label>
+            <label class="text-xs text-charcoal-500 mb-1 block font-medium">用户设定 / 备注</label>
             <textarea
               v-model.trim="userSettings.bio"
               rows="4"
-              class="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-pink-500 focus:outline-none"
+              class="glass-input w-full rounded-lg px-3 py-2 text-sm"
               placeholder="如：年龄、性格、背景、爱好等，AI 回复时可参考"
             />
-            <p class="text-[11px] text-slate-500 mt-1">该设定会一并发送给 AI，帮助更个性化回复。</p>
+            <p class="text-[11px] text-charcoal-400 mt-1">该设定会一并发送给 AI，帮助更个性化回复。</p>
           </div>
         </div>
         <div class="flex justify-end gap-2 pt-4">
-          <button class="px-3 py-1.5 rounded-md bg-white/10 text-sm" @click="showUserSettings = false">取消</button>
-          <button class="px-3 py-1.5 rounded-md bg-pink-600 text-sm text-white" @click="saveUserSettings">保存</button>
+          <button class="px-3 py-1.5 rounded-md bg-charcoal-100 text-charcoal-600 text-sm hover:bg-charcoal-200 transition-colors" @click="showUserSettings = false">取消</button>
+          <button class="px-3 py-1.5 rounded-md btn-primary text-sm shadow-lg shadow-charcoal-900/10" @click="saveUserSettings">保存</button>
         </div>
       </div>
     </div>
@@ -392,33 +394,33 @@
       <div class="modal-card">
         <div class="flex items-center justify-between">
           <div>
-            <p class="text-sm text-gray-400">历史对话</p>
-            <h3 class="font-semibold">{{ sessionView?.role?.name || '当前角色' }}</h3>
+            <p class="text-sm text-charcoal-500">历史对话</p>
+            <h3 class="font-display font-bold text-charcoal-900">{{ sessionView?.role?.name || '当前角色' }}</h3>
           </div>
-          <button class="text-gray-400 hover:text-white" @click="showHistory = false">✕</button>
+          <button class="text-charcoal-400 hover:text-charcoal-900 transition-colors" @click="showHistory = false">✕</button>
         </div>
-        <div v-if="roleHistory.length === 0" class="text-sm text-gray-500 py-6 text-center">暂无记录</div>
+        <div v-if="roleHistory.length === 0" class="text-sm text-charcoal-400 py-6 text-center">暂无记录</div>
         <div v-else class="modal-scroll space-y-2 pr-1">
           <div
             v-for="hist in roleHistory"
             :key="hist.id"
-            class="p-3 rounded-lg border border-white/10 hover:border-pink-500/40 bg-white/5 transition-colors"
+            class="p-3 rounded-lg border border-charcoal-100 hover:border-accent-yellow hover:bg-bg-cream-100 transition-colors bg-white/50"
           >
             <div class="flex items-center justify-between text-sm">
               <div class="cursor-pointer" @click="router.push(`/chat/${hist.id}`); showHistory = false">
-                <span class="text-white truncate">{{ hist.title }}</span>
-                <p class="text-xs text-gray-500 mt-0.5 truncate">{{ hist.model_key || '默认模型' }}</p>
+                <span class="text-charcoal-900 truncate font-medium">{{ hist.title }}</span>
+                <p class="text-xs text-charcoal-500 mt-0.5 truncate">{{ hist.model_key || '默认模型' }}</p>
               </div>
               <div class="flex items-center gap-2">
-                <span class="text-xs text-gray-400 whitespace-nowrap">{{ new Date(hist.updated_at).toLocaleString() }}</span>
-                <button class="text-rose-300 text-xs hover:text-rose-200" @click.stop="deleteHistoryItem(hist.id)">删除</button>
+                <span class="text-xs text-charcoal-400 whitespace-nowrap">{{ new Date(hist.updated_at).toLocaleString() }}</span>
+                <button class="text-status-error text-xs hover:text-red-600" @click.stop="deleteHistoryItem(hist.id)">删除</button>
               </div>
             </div>
           </div>
         </div>
         <div class="flex justify-end gap-2 pt-2">
-          <button class="px-3 py-1.5 rounded-md bg-white/10 text-sm text-rose-300" @click="deleteAllHistory">全部删除</button>
-          <button class="px-3 py-1.5 rounded-md bg-white/10 text-sm" @click="showHistory = false">关闭</button>
+          <button class="px-3 py-1.5 rounded-md bg-charcoal-100 text-sm text-status-error hover:bg-charcoal-200 transition-colors" @click="deleteAllHistory">全部删除</button>
+          <button class="px-3 py-1.5 rounded-md bg-charcoal-100 text-sm text-charcoal-600 hover:bg-charcoal-200 transition-colors" @click="showHistory = false">关闭</button>
         </div>
       </div>
     </div>
@@ -427,67 +429,67 @@
       <div class="modal-card max-w-3xl w-full">
         <div class="flex items-center justify-between mb-2">
           <div class="flex-1 pr-4">
-            <p class="text-sm text-gray-400">预设详情</p>
+            <p class="text-sm text-charcoal-500">预设详情</p>
             <input
               v-model="presetDetail.name"
-              class="mt-1 w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-pink-500 focus:outline-none"
+              class="mt-1 glass-input w-full rounded-lg px-3 py-2 text-sm"
               placeholder="未命名预设"
             />
             <input
               v-model="presetDetail.description"
-              class="mt-2 w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-xs text-white focus:border-pink-500 focus:outline-none"
+              class="mt-2 glass-input w-full rounded-lg px-3 py-2 text-xs"
               placeholder="预设描述"
             />
           </div>
-          <button class="text-gray-400 hover:text-white" @click="showPresetDetail = false">✕</button>
+          <button class="text-charcoal-400 hover:text-charcoal-900 transition-colors" @click="showPresetDetail = false">✕</button>
         </div>
-        <div class="text-xs text-slate-400 mb-3">
+        <div class="text-xs text-charcoal-400 mb-3">
           模型：{{ presetDetail.model_key || '通用' }} · Blocks：{{ presetDetail.blocks?.length || 0 }}
         </div>
         <div class="modal-scroll space-y-3 pr-1 max-h-[60vh]">
           <div
             v-for="(block, idx) in presetDetail.blocks || []"
             :key="idx"
-            class="p-3 rounded-lg border border-white/10 bg-white/5"
+            class="p-3 rounded-lg border border-charcoal-100 bg-white/50"
           >
-            <div class="flex flex-wrap items-center gap-2 text-sm text-white">
+            <div class="flex flex-wrap items-center gap-2 text-sm text-charcoal-900">
               <input
                 v-model="block.name"
-                class="flex-1 min-w-[140px] rounded-md bg-white/10 border border-white/10 px-2 py-1 text-sm"
+                class="flex-1 min-w-[140px] rounded-md bg-white border border-charcoal-200 px-2 py-1 text-sm focus:outline-none focus:border-accent-yellow"
                 placeholder="Block 名称"
               />
               <input
                 v-model="block.id"
-                class="w-28 rounded-md bg-white/10 border border-white/10 px-2 py-1 text-xs"
+                class="w-28 rounded-md bg-white border border-charcoal-200 px-2 py-1 text-xs focus:outline-none focus:border-accent-yellow"
                 placeholder="ID"
               />
               <input
                 v-model="block.role"
-                class="w-24 rounded-md bg-white/10 border border-white/10 px-2 py-1 text-xs"
+                class="w-24 rounded-md bg-white border border-charcoal-200 px-2 py-1 text-xs focus:outline-none focus:border-accent-yellow"
                 placeholder="role"
               />
               <button
                 class="px-2 py-0.5 rounded-full text-xs border transition-colors"
-                :class="block.enabled ? 'bg-emerald-500/10 text-emerald-300 border-emerald-500/30' : 'bg-slate-700/40 text-slate-400 border-slate-600/50'"
+                :class="block.enabled ? 'bg-status-success/10 text-status-success border-status-success/30' : 'bg-charcoal-100 text-charcoal-400 border-charcoal-200'"
                 @click="block.enabled = !block.enabled"
               >
                 {{ block.enabled ? '启用' : '禁用' }}
               </button>
-              <span v-if="block.marker" class="px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-300 text-xs border border-amber-500/30">
+              <span v-if="block.marker" class="px-2 py-0.5 rounded-full bg-status-warning/10 text-status-warning text-xs border border-status-warning/30">
                 Marker
               </span>
             </div>
             <textarea
               v-model="block.content"
-              class="mt-2 w-full rounded-md border border-white/10 bg-white/5 px-2 py-2 text-sm text-slate-200 focus:border-pink-500 focus:outline-none"
+              class="mt-2 w-full rounded-md border border-charcoal-200 bg-white px-2 py-2 text-sm text-charcoal-700 focus:border-accent-yellow focus:outline-none"
               rows="3"
               placeholder="Block 内容"
             />
           </div>
         </div>
         <div class="flex justify-end gap-2 pt-3">
-          <button class="px-3 py-1.5 rounded-md bg-white/10 text-sm" @click="showPresetDetail = false">取消</button>
-          <button class="px-3 py-1.5 rounded-md bg-pink-600 text-white text-sm" @click="savePresetDetail">保存</button>
+          <button class="px-3 py-1.5 rounded-md bg-charcoal-100 text-charcoal-600 text-sm hover:bg-charcoal-200 transition-colors" @click="showPresetDetail = false">取消</button>
+          <button class="px-3 py-1.5 rounded-md btn-primary text-sm shadow-lg shadow-charcoal-900/10" @click="savePresetDetail">保存</button>
         </div>
       </div>
     </div>
@@ -495,28 +497,28 @@
     <div v-if="imageModalVisible" class="modal-backdrop" @click.self="imageModalVisible = false">
       <div class="modal-card max-w-xl w-full">
         <div class="flex items-center justify-between mb-3">
-          <h3 class="font-semibold text-white text-lg">生成图片</h3>
-          <button class="text-gray-400 hover:text-white" @click="imageModalVisible = false">✕</button>
+          <h3 class="font-display font-bold text-charcoal-900 text-lg">生成图片</h3>
+          <button class="text-charcoal-400 hover:text-charcoal-900 transition-colors" @click="imageModalVisible = false">✕</button>
         </div>
-        <p class="text-sm text-slate-400 mb-3">可补充绘图提示词，系统会用预设 + 对话内容自动生成最终 prompt。</p>
-        <label class="text-xs text-slate-400 mb-1 block">持久提示词（会自动保存，每次生成都会附加）</label>
+        <p class="text-sm text-charcoal-500 mb-3">可补充绘图提示词，系统会用预设 + 对话内容自动生成最终 prompt。</p>
+        <label class="text-xs text-charcoal-500 mb-1 block font-medium">持久提示词（会自动保存，每次生成都会附加）</label>
         <textarea
           v-model="persistentImagePrompt"
           rows="2"
-          class="w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm mb-3"
+          class="glass-input w-full rounded-xl px-3 py-2 text-sm mb-3"
           placeholder="例如：偏好二次元风格，保持角色一致"
         />
-        <label class="text-xs text-slate-400 mb-1 block">本次补充提示词</label>
+        <label class="text-xs text-charcoal-500 mb-1 block font-medium">本次补充提示词</label>
         <textarea
           v-model="imagePrompt"
           rows="4"
-          class="w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm"
+          class="glass-input w-full rounded-xl px-3 py-2 text-sm"
           placeholder="例如：夕阳、雨夜、特写等"
         />
         <div class="mt-4 flex justify-end gap-3">
-          <button class="rounded-full border border-white/20 px-4 py-2 text-sm" @click="imageModalVisible = false">取消</button>
+          <button class="rounded-full border border-charcoal-200 px-4 py-2 text-sm text-charcoal-600 hover:bg-charcoal-100 transition-colors" @click="imageModalVisible = false">取消</button>
           <button
-            class="rounded-full bg-primary px-5 py-2 text-sm text-white disabled:opacity-60"
+            class="rounded-full btn-primary px-5 py-2 text-sm disabled:opacity-60 shadow-lg shadow-charcoal-900/10"
             :disabled="isSubmittingImage"
             @click="submitImageJob"
           >
@@ -1339,7 +1341,7 @@ const savePresetDetail = async () => {
   width: 8px;
 }
 .custom-scroll::-webkit-scrollbar-thumb {
-  background-color: rgba(255, 255, 255, 0.08);
+  background-color: rgba(0, 0, 0, 0.1);
   border-radius: 999px;
 }
 .custom-scroll::-webkit-scrollbar-track {
@@ -1349,7 +1351,7 @@ const savePresetDetail = async () => {
 .modal-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(0, 0, 0, 0.2);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1358,11 +1360,12 @@ const savePresetDetail = async () => {
 .modal-card {
   width: 480px;
   max-height: 70vh;
-  background: #0f111a;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 16px;
-  padding: 16px;
-  color: white;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 24px;
+  padding: 24px;
+  color: #1e293b;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -1373,16 +1376,16 @@ const savePresetDetail = async () => {
 }
 
 :deep(.dialogue-double) {
-  color: #9ec5ff;
+  color: #0f172a;
   font-weight: 800;
 }
 :deep(.dialogue-single) {
-  color: #7c8497;
+  color: #475569;
   font-style: italic;
 }
 :deep(.msg-code-block) {
   position: relative;
-  background: #0b1220;
+  background: #1e293b;
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 12px;
   padding: 12px 12px 12px 14px;
@@ -1396,8 +1399,8 @@ const savePresetDetail = async () => {
   position: absolute;
   top: -10px;
   left: 12px;
-  background: #111827;
-  color: #7dd3fc;
+  background: #334155;
+  color: #bae6fd;
   font-size: 10px;
   font-weight: 700;
   padding: 2px 6px;

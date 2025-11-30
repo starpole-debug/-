@@ -1,12 +1,12 @@
 <template>
   <section class="min-h-screen pb-20">
     <!-- Header -->
-    <header class="sticky top-0 z-30 bg-gray-900/80 backdrop-blur-md border-b border-white/5 -mx-4 px-4 py-4 mb-8">
+    <header class="sticky top-0 z-30 bg-white/80 backdrop-blur-md border-b border-charcoal-100 -mx-4 px-4 py-4 mb-8">
       <div class="max-w-7xl mx-auto flex items-center justify-between">
         <div>
           <h1 class="text-xl font-bold text-white flex items-center gap-2">
-            <span v-if="isSearchMode" class="text-indigo-400">搜索</span>
-            <span v-else>发现</span>
+            <span v-if="isSearchMode" class="text-accent-pink">搜索</span>
+            <span v-else class="text-charcoal-900">发现</span>
           </h1>
         </div>
         
@@ -15,16 +15,16 @@
             <button 
               v-if="!isSearchMode"
               @click="isSearchMode = true"
-              class="group flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 hover:bg-white/10 border border-white/5 hover:border-white/10 transition-all"
+              class="group flex items-center gap-2 px-4 py-2 rounded-full bg-charcoal-50 hover:bg-charcoal-100 border border-charcoal-100 hover:border-charcoal-200 transition-all"
             >
-              <div class="i-ph-magnifying-glass text-slate-400 group-hover:text-white" />
-              <span class="text-sm text-slate-500 group-hover:text-slate-300">搜索角色...</span>
+              <div class="i-ph-magnifying-glass text-charcoal-400 group-hover:text-charcoal-600" />
+              <span class="text-sm text-charcoal-500 group-hover:text-charcoal-700">搜索角色...</span>
             </button>
             
             <button 
               v-else
               @click="isSearchMode = false"
-              class="p-2 rounded-full hover:bg-white/10 text-slate-400 hover:text-white transition-colors"
+              class="p-2 rounded-full hover:bg-charcoal-100 text-charcoal-400 hover:text-charcoal-900 transition-colors"
             >
               <div class="i-ph-x text-xl" />
             </button>
@@ -37,22 +37,22 @@
     <div v-if="isSearchMode" class="animate-fade-in max-w-7xl mx-auto">
       <div class="relative mb-8">
         <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-          <div class="i-ph-magnifying-glass text-xl text-indigo-500" />
+          <div class="i-ph-magnifying-glass text-xl text-accent-pink" />
         </div>
         <input
           v-model.trim="keyword"
           placeholder="输入角色名称、描述或标签..."
-          class="w-full bg-slate-800/50 border border-slate-700 rounded-2xl pl-12 pr-4 py-4 text-base focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all shadow-lg shadow-black/20"
+          class="w-full bg-white border border-charcoal-200 rounded-2xl pl-12 pr-4 py-4 text-base text-charcoal-900 focus:outline-none focus:border-accent-pink focus:ring-1 focus:ring-accent-pink transition-all shadow-lg shadow-accent-pink/5"
           auto-focus
         />
       </div>
 
-      <div v-if="isLoading" class="py-20 text-center text-slate-400">
-        <div class="i-svg-spinners-90-ring-with-bg text-3xl mx-auto mb-4 text-indigo-500" />
+      <div v-if="isLoading" class="py-20 text-center text-charcoal-400">
+        <div class="i-svg-spinners-90-ring-with-bg text-3xl mx-auto mb-4 text-accent-pink" />
         <p>正在搜索全宇宙...</p>
       </div>
 
-      <div v-else-if="filtered.length === 0" class="py-32 text-center text-slate-500">
+      <div v-else-if="filtered.length === 0" class="py-32 text-center text-charcoal-500">
         <div class="i-ph-ghost text-6xl mx-auto mb-6 opacity-30" />
         <p class="text-lg">没有找到相关角色</p>
         <p class="text-sm mt-2">换个关键词试试？</p>
@@ -69,10 +69,10 @@
       <section>
         <div class="flex items-center justify-between mb-6">
           <div class="flex items-center gap-2">
-            <div class="p-1.5 rounded-lg bg-orange-500/10 text-orange-500">
+            <div class="p-1.5 rounded-lg bg-status-error/10 text-status-error">
               <div class="i-ph-fire-fill text-xl" />
             </div>
-            <h2 class="text-xl font-bold text-white">热门推荐</h2>
+            <h2 class="text-xl font-bold text-charcoal-900">热门推荐</h2>
           </div>
         </div>
         
@@ -91,10 +91,10 @@
       <section>
         <div class="flex items-center justify-between mb-6">
           <div class="flex items-center gap-2">
-            <div class="p-1.5 rounded-lg bg-indigo-500/10 text-indigo-500">
+            <div class="p-1.5 rounded-lg bg-accent-yellow/20 text-accent-yellow-dark">
               <div class="i-ph-sparkle-fill text-xl" />
             </div>
-            <h2 class="text-xl font-bold text-white">最新发布</h2>
+            <h2 class="text-xl font-bold text-charcoal-900">最新发布</h2>
           </div>
         </div>
         
@@ -113,7 +113,7 @@
 </template>
 
 <script setup lang="ts">
-import RoleRoleCard from '@/components/Role/RoleCard.vue'
+import RoleRoleCard from '@/components/role/RoleCard.vue'
 
 definePageMeta({
   middleware: ['auth'],
